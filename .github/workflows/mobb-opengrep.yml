@@ -1,0 +1,67 @@
+# Mobb/Opengrep Fixer on pull requests (diff-aware)
+# This workflow runs an Opengrep SAST scan on every pull request targeting main,
+# limited to code changed in the PR (diff-aware via --baseline-commit), then
+# passes the SARIF results to the Mobb Fixer to open auto-fix commits.
+#
+# Secrets in use (add your missing ones):
+# MOBB_API_TOKEN - your Mobb user credentials (automatically set if you forked this repo via the Mobb app)
+# GITHUB_TOKEN  - automatically set by GitHub
+
+name: "Opengrep/Mobb with Auto-PR"
+
+on:
+  pull_request_target:
+    branches:
+      - 'main'
+
+jobs:
+  scan-and-fix:
+    name: Diff-aware Opengrep scan + Mobb Auto-PR
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch PR base for diff-aware baseline
+        run: git fetch --no-tags --depth=1 origin ${{ github.event.pull_request.base.sha }}
+
+      - name: Install Opengrep
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
+          echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
+
+      - name: Run Opengrep diff-aware scan
+        run: |
+          opengrep scan \
+            --config auto \
+            --baseline-commit "${{ github.event.pull_request.base.sha }}" \
+            --sarif --output /home/runner/report.json \
+            ./
+        shell: bash -l {0}
+
+      - name: Upload Report
+        if: always()
+        uses: actions/upload-artifact@v4.3.5
+        with:
+          path: /home/runner/report.json
+
+      - name: Run Mobb on the findings and get fixes
+        if: always()
+        uses: mobb-dev/action@v1.1
+        with:
+          report-file: "/home/runner/report.json"
+          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mobb-project-name: "auto-pr-scanandfix"
+          auto-pr: true
+          commit-directly: true
