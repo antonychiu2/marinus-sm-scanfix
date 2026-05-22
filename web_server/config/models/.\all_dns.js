@@ -12,9 +12,8 @@
  * governing permissions and limitations under the License.
  */
 
-const escapeRegExp = require('lodash.escaperegexp');
-const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+import mongoose from 'mongoose';
+import { Schema } from 'mongoose';
 
 /**
  * This model represents all of the DNS records.
@@ -35,7 +34,7 @@ const allDnsSchema = new Schema({
 
 const allDnsModel = mongoose.model('allDnsModel', allDnsSchema);
 
-module.exports = {
+export const all_dns = {
     AllDnsModel: allDnsModel,
     getAllDNSByZonePromise: function (zone, source, created_date, limit, page) {
         /**
@@ -100,7 +99,7 @@ module.exports = {
          * This is a regex match and not a true CIDR match.
          * (Optional) Limit to the provided source.
          */
-        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
+        let reZone = new RegExp('^' + ipRange + '\\..*');
         let query = {
             'type': 'a',
             'value': { '$regex': reZone },
@@ -116,7 +115,7 @@ module.exports = {
          * This is a regex match and not a true CIDR match.
          * (Optional) Limit to a specific source
          */
-        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\:.*');
+        let reZone = new RegExp('^' + ipRange + '\\:.*');
         let query = {
             'type': 'aaaa',
             'value': { '$regex': reZone },
@@ -192,7 +191,7 @@ module.exports = {
         }]).sort({ '_id': 1 }).exec();
 
     },
-    getAllDNSByTypePromise: function (type, zone, source, count) {
+    getAllDNSByTypePromise: function (type, zone, source, count, created_date, limit, page) {
         /**
          * Fetch all records for the given type.
          * (Optional) Limit the search with zone and/or source.
@@ -205,11 +204,19 @@ module.exports = {
         if (source != null) {
             query['sources.source'] = source;
         }
+        if (created_date != null) {
+            query['created'] = { "$gt": new Date(created_date) };
+        }
+
         let promise;
         if (count) {
             promise = allDnsModel.countDocuments(search).exec();
         } else {
-            promise = allDnsModel.find(search).exec();
+            if (limit !== undefined && limit > 0) {
+                promise = allDnsModel.find(search).skip(limit * (page - 1)).limit(limit).exec();
+            } else {
+                promise = allDnsModel.find(search).exec();
+            }
         }
         return promise;
     },
@@ -221,7 +228,7 @@ module.exports = {
         if (subdomain === undefined || subdomain === null || subdomain === 'all') {
             subdomain = '';
         }
-        let reAmazon = new RegExp('^.*' + subdomain + '\.amazonaws\.com');
+        let reAmazon = new RegExp('^.*' + subdomain + '\\.amazonaws\\.com');
 
         let query = {
             'type': 'cname',
@@ -325,7 +332,7 @@ module.exports = {
          */
         let query = {};
 
-        let reDomain = new RegExp('.*\.' + domain_ending + '$');
+        let reDomain = new RegExp('.*\\.' + domain_ending + '$');
 
         query['fqdn'] = { "$regex": reDomain };
 
