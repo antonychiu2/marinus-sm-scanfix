@@ -47,7 +47,6 @@ jobs:
           npx mobbdev@latest analyze \
             --ci \
             --repo "https://github.com/${{ github.repository }}" \
-            --src-path . \
             --ref "${{ github.event.pull_request.head.sha }}" \
             --baseline-commit "${{ github.event.pull_request.base.sha }}" \
             --mobb-project-name "auto-pr-scanandfix" \
