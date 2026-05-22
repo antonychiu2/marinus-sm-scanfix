@@ -50,6 +50,7 @@ jobs:
             --ref "${{ github.event.pull_request.head.sha }}" \
             --baseline-commit "${{ github.event.pull_request.base.sha }}" \
             --mobb-project-name "auto-pr-scanandfix" \
+            --org 5878a761-1c89-4e13-9c50-b1ee31faab0d \
             --pr-number ${{ github.event.pull_request.number }} \
             --auto-pr \
             --commit-directly \
