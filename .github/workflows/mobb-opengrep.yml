@@ -57,11 +57,17 @@ jobs:
 
       - name: Run Mobb on the findings and get fixes
         if: always()
+        env:
+          API_URL: https://api-sonatype.mobb.dev/v1/graphql
+          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+          WEB_APP_URL: https://sonatype.mobb.dev
         uses: mobb-dev/action@v1.1
         with:
           report-file: "/home/runner/report.json"
           api-key: ${{ secrets.MOBB_API_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           mobb-project-name: "auto-pr-scanandfix"
+          # Eitan's organization
+          organization-id: 5878a761-1c89-4e13-9c50-b1ee31faab0d
           auto-pr: true
           commit-directly: true
