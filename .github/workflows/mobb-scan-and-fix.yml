@@ -39,6 +39,9 @@ jobs:
         env:
           MOBB_API_TOKEN: ${{ secrets.MOBB_API_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          API_URL: https://api-sonatype.mobb.dev/v1/graphql
+          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+          WEB_APP_URL: https://sonatype.mobb.dev
         run: |
           npx mobbdev@latest analyze \
             --ci \
