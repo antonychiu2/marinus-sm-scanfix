@@ -175,7 +175,7 @@ module.exports = {
          * Fetch all TXT records that match ".*v={stringType}.*"
          * (Optional) Limit by source.
          */
-        let reSPF = new RegExp('.*v=' + stringType + '.*', 'i');
+        let reSPF = new RegExp('.*v=' + escapeRegExp(stringType) + '.*', 'i');
 
         let query = { 'type': 'txt', 'value': { '$regex': reSPF } };
 
