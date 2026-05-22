@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -99,7 +100,7 @@ module.exports = {
          * This is a regex match and not a true CIDR match.
          * (Optional) Limit to the provided source.
          */
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         let query = {
             'type': 'a',
             'value': { '$regex': reZone },
