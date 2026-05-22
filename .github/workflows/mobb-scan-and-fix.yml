@@ -1,0 +1,53 @@
+# Mobb native scan-and-fix on pull requests (diff-aware)
+# The Mobb CLI (bugsy) now supports native scan + fix, so we no longer need a
+# separate SAST step (Opengrep) feeding a SARIF report into the Mobb action.
+# The mobb-dev/action hasn't exposed this mode yet, so invoke the CLI directly.
+#
+# Secrets in use:
+# MOBB_API_TOKEN - your Mobb user credentials (automatically set if you forked this repo via the Mobb app)
+# GITHUB_TOKEN  - automatically set by GitHub
+
+name: "Mobb Scan-and-Fix with Auto-PR"
+
+on:
+  pull_request_target:
+    branches:
+      - 'main'
+
+jobs:
+  scan-and-fix:
+    name: Mobb native diff-aware scan + Auto-PR
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Fetch PR base for diff-aware baseline
+        run: git fetch --no-tags --depth=1 origin ${{ github.event.pull_request.base.sha }}
+
+      - name: Run Mobb diff-aware scan and fix
+        env:
+          MOBB_API_TOKEN: ${{ secrets.MOBB_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx mobbdev@latest analyze \
+            --ci \
+            --repo "https://github.com/${{ github.repository }}" \
+            --src-path . \
+            --ref "${{ github.event.pull_request.head.sha }}" \
+            --baseline-commit "${{ github.event.pull_request.base.sha }}" \
+            --mobb-project-name "auto-pr-scanandfix" \
+            --pr-number ${{ github.event.pull_request.number }} \
+            --auto-pr \
+            --commit-directly \
+            --api-key "${MOBB_API_TOKEN}"
