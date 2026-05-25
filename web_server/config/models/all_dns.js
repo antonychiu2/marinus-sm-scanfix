@@ -288,7 +288,7 @@ export const all_dns = {
          * Fetch all CNAME records that end in the provided search string.
          * (Optional) Limit the request by zone and/or source.
          */
-        let reSearch = new RegExp('.*' + search + '$');
+        let reSearch = new RegExp('.*' + escapeRegExp(search) + '$');
         let promise;
         let query;
         if (zone) {
