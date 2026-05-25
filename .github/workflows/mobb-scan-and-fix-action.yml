@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 0
 
       - name: Run Mobb scan-and-fix (diff-aware)
-        uses: mobb-dev/action@feat/scan-and-fix-diff-aware
+        uses: mobb-dev/action@5d22ec4ba9e28c32dee55413f4c95a8a69497658
         env:
           API_URL: https://api-sonatype.mobb.dev/v1/graphql
           WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login

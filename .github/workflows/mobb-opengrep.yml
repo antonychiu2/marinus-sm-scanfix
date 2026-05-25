@@ -58,7 +58,7 @@ jobs:
           API_URL: https://api-sonatype.mobb.dev/v1/graphql
           WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
           WEB_APP_URL: https://sonatype.mobb.dev
-        uses: mobb-dev/action@v1.1
+        uses: mobb-dev/action@b7e5b94ac088e6b7ee970cc2e014ce65d3d234ba
         with:
           report-file: "/home/runner/report.json"
           api-key: ${{ secrets.MOBB_API_TOKEN }}

@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -64,7 +65,7 @@ module.exports = {
         return deadDnsModel.find(query).exec();
     },
     getDeadDNSByIPRangePromise: function (ipRange, source) {
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         let query = {
             'type': 'a',
             'value': { '$regex': reZone },
@@ -132,7 +133,7 @@ module.exports = {
         return deadDnsModel.countDocuments(query).exec();
     },
     getDeadDNSByCanonicalSearch: function (search, zone, source) {
-        let reSearch = new RegExp('.*' + search + '$');
+        let reSearch = new RegExp('.*' + escapeRegExp(search) + '$');
         let promise;
         let query;
         if (zone) {
