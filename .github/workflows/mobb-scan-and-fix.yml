@@ -32,9 +32,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
 
-      - name: Fetch PR base for diff-aware baseline
-        run: git fetch --no-tags --depth=1 origin ${{ github.event.pull_request.base.sha }}
-
       - name: Run Mobb diff-aware scan and fix
         env:
           MOBB_API_TOKEN: ${{ secrets.MOBB_API_TOKEN }}
