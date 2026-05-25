@@ -1,0 +1,55 @@
+# Mobb scan-and-fix on pull requests (diff-aware) — official action variant
+# Same behavior as mobb-scan-and-fix.yml, but driven by the mobb-dev/action
+# instead of invoking the Mobb CLI directly. report-file is omitted to enable
+# scan-and-fix mode (internal opengrep), and diff-aware is set to true so the
+# action passes --baseline-commit derived from the PR base SHA.
+#
+# NOTE: pinned to the feat/scan-and-fix-diff-aware branch because the
+# diff-aware input is not yet released. Re-pin to a tagged version once
+# https://github.com/mobb-dev/action/pull/37 lands.
+#
+# Secrets in use:
+# MOBB_API_TOKEN - your Mobb user credentials (automatically set if you forked this repo via the Mobb app)
+# GITHUB_TOKEN  - automatically set by GitHub
+
+name: "Mobb Scan-and-Fix (Action) with Auto-PR"
+
+on:
+  pull_request_target:
+    branches:
+      - 'main'
+
+jobs:
+  scan-and-fix:
+    name: Mobb action diff-aware scan + Auto-PR
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Run Mobb scan-and-fix (diff-aware)
+        uses: mobb-dev/action@feat/scan-and-fix-diff-aware
+        env:
+          API_URL: https://api-sonatype.mobb.dev/v1/graphql
+          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+          WEB_APP_URL: https://sonatype.mobb.dev
+          DEBUG: "*"
+        with:
+          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mobb-project-name: "auto-pr-scanandfix"
+          # Eitan's organization
+          organization-id: 5878a761-1c89-4e13-9c50-b1ee31faab0d
+          auto-pr: true
+          commit-directly: true
+          diff-aware: true
