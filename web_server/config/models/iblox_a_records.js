@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -52,7 +53,7 @@ module.exports = {
         }).exec();
     },
     getIBAddrByIPRangePromise: function (ipRange) {
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         return ipAddrModel.find({
             'ipv4addr': { '$regex': reZone },
         }).exec();
