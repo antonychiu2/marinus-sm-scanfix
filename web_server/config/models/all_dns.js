@@ -13,6 +13,7 @@
  */
 
 import mongoose from 'mongoose';
+import * as escapeRegExp from 'lodash.escaperegexp';
 import { Schema } from 'mongoose';
 
 /**
@@ -174,7 +175,7 @@ export const all_dns = {
          * Fetch all TXT records that match ".*v={stringType}.*"
          * (Optional) Limit by source.
          */
-        let reSPF = new RegExp('.*v=' + stringType + '.*', 'i');
+        let reSPF = new RegExp('.*v=' + escapeRegExp(stringType) + '.*', 'i');
 
         let query = { 'type': 'txt', 'value': { '$regex': reSPF } };
 
