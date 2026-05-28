@@ -52,4 +52,4 @@ jobs:
           organization-id: 5878a761-1c89-4e13-9c50-b1ee31faab0d
           auto-pr: true
           commit-directly: true
-          baseline-commit: ${{ github.event.pull_request.base.sha }}"
+          diff-aware: true
