@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const zPortSchema = require('./zgrab_port_schema.js');
 
 // zgrab port scan module
@@ -165,7 +166,7 @@ module.exports = {
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
-        let thisDecade = new RegExp('^' + year + '.*');
+        let thisDecade = new RegExp('^' + escapeRegExp(year) + '.*');
         return zPortSchema.zgrabPortModel.find({ 'data.tls.server_certificates.certificate.parsed.validity.end': thisDecade },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
