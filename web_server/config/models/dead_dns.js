@@ -65,7 +65,7 @@ module.exports = {
         return deadDnsModel.find(query).exec();
     },
     getDeadDNSByIPRangePromise: function (ipRange, source) {
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         let query = {
             'type': 'a',
             'value': { '$regex': reZone },
