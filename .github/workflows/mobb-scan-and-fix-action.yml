@@ -43,7 +43,6 @@ jobs:
           API_URL: https://api-sonatype.mobb.dev/v1/graphql
           WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
           WEB_APP_URL: https://sonatype.mobb.dev
-          DEBUG: "*"
         with:
           api-key: ${{ secrets.MOBB_API_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
