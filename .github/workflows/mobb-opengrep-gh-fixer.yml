@@ -69,8 +69,7 @@ jobs:
           report-file: "/home/runner/report.json"
           api-key: ${{ secrets.MOBB_API_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          # Opengrep emits semgrep-compatible SARIF; the Mobb CLI accepts "semgrep"
-          # as a scanner value even though the review action's description only
-          # lists codeql/snyk/checkmarx/fortify.
           scanner: semgrep
-          mobb-project-name: "review-mode-demo"
+          mobb-project-name: "auto-pr-scanandfix"
+          # Eitan's organization
+          organization-id: 5878a761-1c89-4e13-9c50-b1ee31faab0d
