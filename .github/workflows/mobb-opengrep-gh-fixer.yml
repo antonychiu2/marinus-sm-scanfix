@@ -1,0 +1,76 @@
+# Mobb Fixer (review mode) on pull requests
+# Runs a diff-aware Opengrep scan, then hands the SARIF to Mobb in review mode.
+# Mobb posts a PR comment with a "Commit" button per fix so users opt in to each
+# applied change. This is the equivalent of the Snyk + Mobb review-mode demo,
+# adapted to use Opengrep as the SAST scanner.
+#
+# Why the split: Mobb review mode does not yet support native scan-and-fix
+# (the analyze flow does). Until it does, we run Opengrep as a separate
+# CI step and feed its SARIF into the review action.
+#
+# Secrets in use:
+# MOBB_API_TOKEN - your Mobb user credentials (automatically set if you forked this repo via the Mobb app)
+# GITHUB_TOKEN  - automatically set by GitHub
+
+name: "Mobb Review Mode (Opengrep)"
+
+on:
+  pull_request_target:
+    branches:
+      - 'main'
+
+jobs:
+  scan-and-review:
+    name: Diff-aware Opengrep scan + Mobb review-mode PR comment
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Install Opengrep
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/opengrep/opengrep/main/install.sh | bash
+          echo "$HOME/.opengrep/cli/latest" >> "$GITHUB_PATH"
+
+      - name: Run Opengrep diff-aware scan
+        run: |
+          opengrep scan \
+            --config auto \
+            --baseline-commit "${{ github.event.pull_request.base.sha }}" \
+            --sarif --output /home/runner/report.json \
+            ./
+        shell: bash -l {0}
+
+      - name: Upload Report
+        if: always()
+        uses: actions/upload-artifact@v4.3.5
+        with:
+          name: sast-report
+          path: /home/runner/report.json
+
+      - name: Run Mobb review on findings
+        if: always()
+        uses: mobb-dev/action/review@v1.2
+        env:
+          API_URL: https://api-sonatype.mobb.dev/v1/graphql
+          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+          WEB_APP_URL: https://sonatype.mobb.dev
+        with:
+          report-file: "/home/runner/report.json"
+          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Opengrep emits semgrep-compatible SARIF; the Mobb CLI accepts "semgrep"
+          # as a scanner value even though the review action's description only
+          # lists codeql/snyk/checkmarx/fortify.
+          scanner: semgrep
+          mobb-project-name: "review-mode-demo"
