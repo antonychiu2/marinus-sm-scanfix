@@ -61,13 +61,13 @@ jobs:
       - name: Run Mobb review on findings
         if: always()
         uses: mobb-dev/action/review@v1.2
-        env:
-          API_URL: https://api-sonatype.mobb.dev/v1/graphql
-          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
-          WEB_APP_URL: https://sonatype.mobb.dev
+        # env:
+        #   API_URL: https://api-sonatype.mobb.dev/v1/graphql
+        #   WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+        #   WEB_APP_URL: https://sonatype.mobb.dev
         with:
           report-file: "/home/runner/report.json"
-          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          api-key: ${{ secrets.MOBB_API_TOKEN_PROD }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           scanner: semgrep
           mobb-project-name: "auto-pr-scanandfix"
