@@ -44,7 +44,7 @@ jobs:
           # WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
           # WEB_APP_URL: https://sonatype.mobb.dev
         with:
-          api-key: ${{ secrets.MOBB_API_TOKEN }}
+          api-key: ${{ secrets.MOBB_API_TOKEN_PROD }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           mobb-project-name: "auto-pr-scanandfix"
           # Eitan's organization on preview 5878a761-1c89-4e13-9c50-b1ee31faab0d
