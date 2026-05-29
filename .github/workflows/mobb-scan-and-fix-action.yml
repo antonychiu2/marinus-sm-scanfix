@@ -39,16 +39,17 @@ jobs:
 
       - name: Run Mobb scan-and-fix (diff-aware)
         uses: mobb-dev/action@v1.2
-        env:
-          API_URL: https://api-sonatype.mobb.dev/v1/graphql
-          WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
-          WEB_APP_URL: https://sonatype.mobb.dev
+        # env:
+          # API_URL: https://api-sonatype.mobb.dev/v1/graphql
+          # WEB_LOGIN_URL: https://sonatype.mobb.dev/cli-login
+          # WEB_APP_URL: https://sonatype.mobb.dev
         with:
           api-key: ${{ secrets.MOBB_API_TOKEN }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           mobb-project-name: "auto-pr-scanandfix"
-          # Eitan's organization
-          organization-id: 5878a761-1c89-4e13-9c50-b1ee31faab0d
+          # Eitan's organization on preview 5878a761-1c89-4e13-9c50-b1ee31faab0d
+          # Antony's Main Org ba9e6ee1-fb72-4c8d-bc03-a759538796e9
+          organization-id: ba9e6ee1-fb72-4c8d-bc03-a759538796e9
           auto-pr: true
           commit-directly: true
           diff-aware: true
