@@ -13,6 +13,7 @@
  */
 
 import mongoose from 'mongoose';
+import * as escapeRegExp from 'lodash.escaperegexp';
 import { Schema } from 'mongoose';
 
 /**
@@ -131,7 +132,7 @@ export const all_dns = {
          * (Optional) Limit by zone and/or source
          * If count is true, return the count of the matched records.
          */
-        let reZone = new RegExp('.*' + txtRegex + '.*', 'i');
+        let reZone = new RegExp('.*' + escapeRegExp(txtRegex) + '.*', 'i');
         let query = {
             'type': 'txt',
             'value': { '$regex': reZone }
