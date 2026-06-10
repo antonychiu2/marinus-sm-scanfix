@@ -13,6 +13,7 @@
  */
 
 import mongoose from 'mongoose';
+import * as escapeRegExp from 'lodash.escaperegexp';
 import { Schema } from 'mongoose';
 
 /**
@@ -332,7 +333,7 @@ export const all_dns = {
          */
         let query = {};
 
-        let reDomain = new RegExp('.*\\.' + domain_ending + '$');
+        let reDomain = new RegExp('.*\\.' + escapeRegExp(domain_ending) + '$');
 
         query['fqdn'] = { "$regex": reDomain };
 
