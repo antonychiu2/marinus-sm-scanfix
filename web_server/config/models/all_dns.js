@@ -116,7 +116,7 @@ export const all_dns = {
          * This is a regex match and not a true CIDR match.
          * (Optional) Limit to a specific source
          */
-        let reZone = new RegExp('^' + ipRange + '\\:.*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\:.*');
         let query = {
             'type': 'aaaa',
             'value': { '$regex': reZone },
