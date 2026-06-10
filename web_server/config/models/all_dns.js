@@ -229,7 +229,7 @@ export const all_dns = {
         if (subdomain === undefined || subdomain === null || subdomain === 'all') {
             subdomain = '';
         }
-        let reAmazon = new RegExp('^.*' + subdomain + '\\.amazonaws\\.com');
+        let reAmazon = new RegExp('^.*' + escapeRegExp(subdomain) + '\\.amazonaws\\.com');
 
         let query = {
             'type': 'cname',
