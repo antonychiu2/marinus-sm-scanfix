@@ -1,0 +1,74 @@
+# New Bugsy (@mobb.ai/cli) auto-PR / auto-commit test - marinus-sm-scanfix variant
+#
+# Exercises mobb-dev/action@feat/mobb-ai-cli-migration (PR #38), which runs
+# `npx --yes @mobb.ai/cli@latest analyze --ci ...` instead of legacy mobbdev.
+# Modeled on this repo's mobb-scan-and-fix-action.yml. report-file is omitted
+# (scan-and-fix mode, Mobb's internal scanner) so no Snyk secret is needed.
+#
+# Runs on push to test/new-bugsy-cli (defaults to auto-pr mode), or trigger
+# manually with a mode once this file is on the default branch:
+#   auto-pr           one PR per fix                     (--auto-pr)
+#   create-one-pr     one unified PR for all fixes       (--auto-pr --create-one-pr)
+#   commit-directly   commit fixes straight to branch    (--auto-pr --commit-directly)
+#
+# Secrets used (already configured on this repo):
+#   MOBB_API_TOKEN_PROD, GITHUB_TOKEN (automatic)
+
+name: "New Bugsy CLI Auto-PR Test"
+
+on:
+  # pull_request runs this workflow from the PR head branch, so it works
+  # without being on the default branch. Push events do not trigger runs on
+  # this repo (verified: every historical run here is a PR event).
+  pull_request:
+    branches:
+      - 'main'
+  push:
+    branches:
+      - 'test/new-bugsy-cli'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Fix delivery mode"
+        type: choice
+        default: auto-pr
+        options:
+          - auto-pr
+          - create-one-pr
+          - commit-directly
+
+jobs:
+  scan-and-fix:
+    name: "New Bugsy scan-and-fix + auto-PR"
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      pull-requests: write
+      statuses: write
+      contents: read
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # on push events inputs.mode is empty -> defaults to auto-pr behavior
+      - name: Run new Bugsy (@mobb.ai/cli) scan-and-fix
+        id: mobb
+        uses: mobb-dev/action@feat/mobb-ai-cli-migration
+        with:
+          api-key: ${{ secrets.MOBB_API_TOKEN_PROD }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          mobb-project-name: "New Bugsy Test"
+          organization-id: ba9e6ee1-fb72-4c8d-bc03-a759538796e9
+          auto-pr: true
+          create-one-pr: ${{ inputs.mode == 'create-one-pr' }}
+          commit-directly: ${{ inputs.mode == 'commit-directly' }}
+
+      - name: Show fix report URL
+        if: always()
+        run: |
+          echo "Mode: ${{ inputs.mode || 'auto-pr' }}"
+          echo "Fix report: ${{ steps.mobb.outputs.fix-report-url }}"
