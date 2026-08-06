@@ -17,6 +17,12 @@
 name: "New Bugsy CLI Auto-PR Test"
 
 on:
+  # pull_request runs this workflow from the PR head branch, so it works
+  # without being on the default branch. Push events do not trigger runs on
+  # this repo (verified: every historical run here is a PR event).
+  pull_request:
+    branches:
+      - 'main'
   push:
     branches:
       - 'test/new-bugsy-cli'
