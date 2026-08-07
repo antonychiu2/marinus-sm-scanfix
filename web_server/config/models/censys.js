@@ -108,8 +108,8 @@ module.exports = {
     getSSLByCorpNamePromise: function (internalDomain) {
         let reCorp = new RegExp('^.*\.' + internalDomain);
         return cSchema.censysModel.find({
-            '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
-            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
+            '$or': mongoSanitize.sanitize({ data: [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
+            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }] }).data,
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getSSLByValidity2kPromise: function () {
