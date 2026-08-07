@@ -219,7 +219,7 @@ module.exports = {
     if (count === true) {
       promise = certTransModel.countDocuments({ 'sources': logName }).exec();
     } else {
-      promise = certTransModel.find({ 'sources': logName }).exec();
+      promise = certTransModel.find({ 'sources': mongoSanitize.sanitize({ data: logName }).data }).exec();
     }
     return promise;
   },
