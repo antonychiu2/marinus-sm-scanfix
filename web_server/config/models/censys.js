@@ -121,7 +121,7 @@ module.exports = {
     getSSLByValidityYearPromise: function (year) {
         let thisDecade = new RegExp('^' + year + '.*');
         return cSchema.censysModel.find({
-            'p443.https.tls.certificate.parsed.validity.end': thisDecade,
+            'p443.https.tls.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: thisDecade }).data,
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getCorpSSLCountPromise: function (internalDomain) {
