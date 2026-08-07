@@ -127,8 +127,8 @@ module.exports = {
     getCorpSSLCountPromise: function (internalDomain) {
         let reCorp = new RegExp('^.*\.' + internalDomain);
         return cSchema.censysModel.find({
-            '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
-            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
+            '$or': mongoSanitize.sanitize({ data: [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
+            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }] }).data,
         }).countDocuments().exec();
     },
     getSSLOrgCountPromise: function (org) {
