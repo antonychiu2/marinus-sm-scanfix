@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const z2_443_schema = require('./zgrab2_443_data_schema.js');
 const zgrab2_cert_path = 'data.http.result.response.request.tls_log.handshake_log.server_certificates.';
 
@@ -211,7 +212,7 @@ module.exports = {
     },
     getSSLByZonePromise: function (zone, count, recursive) {
         let escZone = zone.replace('.', '\\.');
-        let reZone = new RegExp('^.*\.' + escZone + '$');
+        let reZone = new RegExp('^.*\.' + escapeRegExp(escZone) + '$');
         let promise;
         if (recursive === true) {
             if (count) {
@@ -414,7 +415,7 @@ module.exports = {
     },
     getSSLAlgorithmByZonePromise: function (algorithm, zone, count, recursive, limit, page) {
         let escZone = zone.replace('.', '\\.');
-        let reZone = new RegExp('^.*\.' + escZone + '$');
+        let reZone = new RegExp('^.*\.' + escapeRegExp(escZone) + '$');
         let promise;
         if (recursive === true) {
             if (count === true) {

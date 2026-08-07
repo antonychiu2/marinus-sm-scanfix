@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const cSchema = require('./censys_schema2');
 
 // CensysModel
@@ -21,7 +22,7 @@ module.exports = {
         return cSchema.censysModel.find({ 'ip': ip }).exec();
     },
     getRecordByIpRangePromise: function (ipRange) {
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         return cSchema.censysModel.find({
             'ip': { '$regex': reZone },
         }).exec();
@@ -105,7 +106,7 @@ module.exports = {
         return (promise);
     },
     getSSLByCorpNamePromise: function (internalDomain) {
-        let reCorp = new RegExp('^.*\.' + internalDomain);
+        let reCorp = new RegExp('^.*\.' + escapeRegExp(internalDomain));
         return cSchema.censysModel.find({
             '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
             { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
@@ -118,13 +119,13 @@ module.exports = {
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
-        let thisDecade = new RegExp('^' + year + '.*');
+        let thisDecade = new RegExp('^' + escapeRegExp(year) + '.*');
         return cSchema.censysModel.find({
             'p443.https.tls.certificate.parsed.validity.end': thisDecade,
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getCorpSSLCountPromise: function (internalDomain) {
-        let reCorp = new RegExp('^.*\.' + internalDomain);
+        let reCorp = new RegExp('^.*\.' + escapeRegExp(internalDomain));
         return cSchema.censysModel.find({
             '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
             { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
@@ -164,7 +165,7 @@ module.exports = {
     },
     getSSLAlgorithmByZonePromise: function (algorithm, zone, count) {
         let escZone = zone.replace('.', '\\.');
-        let reZone = new RegExp('^.*\.' + escZone + '$');
+        let reZone = new RegExp('^.*\.' + escapeRegExp(escZone) + '$');
         let promise;
         if (count === true) {
             promise = cSchema.censysModel.find({
