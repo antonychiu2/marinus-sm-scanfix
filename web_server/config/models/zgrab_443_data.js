@@ -563,7 +563,7 @@ module.exports = {
         if (recursive === true) {
             if (count === true) {
                 promise = zSchema.zgrab443Model.countDocuments({
-                    [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                    [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                 }).exec();
             } else {
                 if (limit > 0 && page > 0) {
