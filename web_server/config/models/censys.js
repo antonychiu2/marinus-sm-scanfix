@@ -79,8 +79,8 @@ module.exports = {
     },
     getSSLByCommonNamePromise: function (commonName) {
         return cSchema.censysModel.find({
-            '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': commonName },
-            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': commonName }],
+            '$or': mongoSanitize.sanitize({ data: [{ 'p443.https.tls.certificate.parsed.subject.common_name': commonName },
+            { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': commonName }] }).data,
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getSSLByZonePromise: function (zone, count) {
