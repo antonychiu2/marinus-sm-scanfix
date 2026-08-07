@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z2PortSchema = require('./zgrab2_port_schema.js');
 
 // ZGrab 2.0 port scan module
@@ -20,7 +21,7 @@ module.exports = {
     getRecordByIPPromise: function (ip, port, count) {
         if (port === "22") {
             if (count) {
-                return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }).exists('data.ssh').exec();
+                return z2PortSchema.zgrab2PortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.ssh').exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }, { 'ip': 1, 'data.ssh': 1 }).exec();
             }
