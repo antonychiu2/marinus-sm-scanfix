@@ -35,7 +35,7 @@ module.exports = {
     GroupModel: groupModel,
     getGroupByNamePromise: function (name) {
         return groupModel.findOne({
-            'name': name,
+            'name': mongoSanitize.sanitize({ data: name }).data,
         }).exec();
     },
     getAllGroups: function () {
