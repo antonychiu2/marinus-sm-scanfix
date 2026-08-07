@@ -119,7 +119,7 @@ module.exports = {
   },
   getCertTransIPPromise: function (ip) {
     return certTransModel.find({
-      'subject_ip_addresses': ip,
+      'subject_ip_addresses': mongoSanitize.sanitize({ data: ip }).data,
     }).exec();
   },
   getCertTransById: function (id) {
