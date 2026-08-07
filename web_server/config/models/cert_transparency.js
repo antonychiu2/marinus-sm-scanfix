@@ -244,7 +244,7 @@ module.exports = {
       }).exec();
     } else {
       promise = certTransModel.findOne({
-        'fingerprint_sha256': fingerprintSha256,
+        'fingerprint_sha256': mongoSanitize.sanitize({ data: fingerprintSha256 }).data,
       }).exec();
     }
     return promise;
