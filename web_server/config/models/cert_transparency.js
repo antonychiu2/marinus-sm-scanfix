@@ -292,7 +292,7 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_updated': { "$gt": new Date(marinus_updated) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$gt": new Date(marinus_updated) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
