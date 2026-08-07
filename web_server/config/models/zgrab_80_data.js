@@ -20,7 +20,7 @@ module.exports = {
     zgrabModel: z80Schema.zgrab80Model,
     getRecordByDomainPromise: function (domain, count) {
         if (count) {
-            return z80Schema.zgrab80Model.find({ 'domain': domain }).countDocuments().exec();
+            return z80Schema.zgrab80Model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec();
         } else {
             return z80Schema.zgrab80Model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).exec();
         }
