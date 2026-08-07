@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -65,7 +66,7 @@ module.exports = {
             }).exec();
         } else {
             promise = cnameModel.find({
-                'canonical': { '$regex': reSearch },
+                'canonical': mongoSanitize.sanitize({ data: { '$regex': reSearch } }).data,
             }).exec();
         }
         return promise;
