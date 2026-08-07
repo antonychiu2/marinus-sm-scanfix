@@ -45,7 +45,7 @@ module.exports = {
     },
     getIBHostByIBloxZonePromise: function (zone) {
         return hostModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBHostByNamePromise: function (name) {
