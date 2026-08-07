@@ -32,7 +32,7 @@ const zgrab_cert_path = 'data.http.response.request.tls_handshake.server_certifi
 module.exports = {
     zgrabModel: zSchema.zgrab443Model,
     getRecordByDomainPromise: function (domain) {
-        return zSchema.zgrab443Model.find({ 'domain': domain }).exec();
+        return zSchema.zgrab443Model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).exec();
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
