@@ -58,7 +58,7 @@ module.exports = {
         let promise;
         if ((ip !== null) && (ip !== undefined)) {
             promise = cSchema.censysModel.find({
-                'ip': ip,
+                'ip': mongoSanitize.sanitize({ data: ip }).data,
             }, limitQuery).exists(pPort).exec();
         } else {
             promise = cSchema.censysModel.find({}, limitQuery).exists(pPort).exec();
