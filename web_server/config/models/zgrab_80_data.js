@@ -43,7 +43,7 @@ module.exports = {
     getDomainListPromise: function (count, limit, page) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ "domain": { "$ne": "<nil>" } }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
             promise = z80Schema.zgrab80Model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
