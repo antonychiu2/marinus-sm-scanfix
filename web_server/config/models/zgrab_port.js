@@ -29,7 +29,7 @@ module.exports = {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.smtp').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.smtp': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.smtp': 1 }).exec();
             }
         } else if (port === "443") {
             if (count) {
