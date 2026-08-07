@@ -64,7 +64,7 @@ module.exports = {
      */
     getIBCnameExtattr: function (value) {
         return extattrModel.find({
-            'record_type': 'cname',
+            'record_type': mongoSanitize.sanitize({ data: 'cname' }).data,
             'value': value,
         }, { 'extattrs': 1 }).exec();
     },
