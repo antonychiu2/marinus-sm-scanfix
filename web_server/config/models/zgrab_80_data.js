@@ -34,7 +34,7 @@ module.exports = {
     getRecordsByZonePromise: function (zone, count) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ 'zones': zone }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
             promise = z80Schema.zgrab80Model.find({ 'zones': zone }).exec();
         }
