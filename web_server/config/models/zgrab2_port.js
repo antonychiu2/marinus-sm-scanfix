@@ -104,7 +104,7 @@ module.exports = {
     },
     getRecordByZonePromise: function (zone, port, count) {
         if (port === "22") {
-            return z2PortSchema.zgrab2PortModel.find({ "zones": zone }).exists("data.ssh").exec();
+            return z2PortSchema.zgrab2PortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.ssh").exec();
         } else if (port === "25") {
             return z2PortSchema.zgrab2PortModel.find({ "zones": zone }).exists("data.smtp").exec();
         } else if (port === "443") {
