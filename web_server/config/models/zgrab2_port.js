@@ -179,8 +179,8 @@ module.exports = {
             }, { 'ip': 1, 'data.tls': 1 }).countDocuments().exec();
         } else {
             return z2PortSchema.zgrab2PortModel.find({
-                '$or': [{ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.subject.common_name': reCorp },
-                { 'data.tls.result.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
+                '$or': mongoSanitize.sanitize({ data: [{ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.subject.common_name': reCorp },
+                { 'data.tls.result.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }] }).data,
             }, { 'ip': 1, 'data.tls': 1 }).exec();
         }
     },
