@@ -173,8 +173,8 @@ module.exports = {
     getSSLByCorpNamePromise: function (internalDomain) {
         let reCorp = new RegExp('^.*\.' + internalDomain);
         return zPortSchema.zgrabPortModel.find({
-            '$or': [{ 'data.tls.server_certificates.certificate.parsed.subject.common_name': reCorp },
-            { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
+            '$or': mongoSanitize.sanitize({ data: [{ 'data.tls.server_certificates.certificate.parsed.subject.common_name': reCorp },
+            { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }] }).data,
         }, { 'ip': 1, 'data.tls': 1 }).exec();
     },
     getFullCountPromise: function () {
