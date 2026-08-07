@@ -212,7 +212,7 @@ module.exports = function (envConfig) {
             }
 
             if (req.query.hasOwnProperty('range')) {
-                let searchRange = createRange(req.query.range);
+                let searchRange = createRange(String(req.query.range));
                 if (searchRange.startsWith('Error')) {
                     res.status(500).json({ 'message': searchRange });
                     return;
