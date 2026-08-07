@@ -66,9 +66,9 @@ module.exports = {
         let promise;
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'name_servers': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'name_servers': { '$exists': false } },
                 { 'name_servers': [] },
-                { 'name_servers': null }],
+                { 'name_servers': null }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
