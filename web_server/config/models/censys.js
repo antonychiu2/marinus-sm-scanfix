@@ -119,7 +119,7 @@ module.exports = {
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
-        let thisDecade = new RegExp('^' + year + '.*');
+        let thisDecade = new RegExp('^' + escapeRegExp(year) + '.*');
         return cSchema.censysModel.find({
             'p443.https.tls.certificate.parsed.validity.end': thisDecade,
         }, { 'ip': 1, 'p443': 1 }).exec();
