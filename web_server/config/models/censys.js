@@ -249,7 +249,7 @@ module.exports = {
 
         if (count) {
             promise = cSchema.censysModel.countDocuments({
-                'p443.https.tls.certificate.parsed.serial_number': serial_number,
+                'p443.https.tls.certificate.parsed.serial_number': mongoSanitize.sanitize({ data: serial_number }).data,
             }).exec();
         } else {
             promise = cSchema.censysModel.find({
