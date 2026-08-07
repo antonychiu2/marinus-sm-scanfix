@@ -130,7 +130,7 @@ module.exports = {
         let promise;
         if (count) {
             promise = virustotalModel.find({
-                'zone': zone,
+                'zone': mongoSanitize.sanitize({ data: zone }).data,
                 'detected_referrer_samples': { '$ne': [] },
             }).exists('detected_referrer_samples').countDocuments().exec();
         } else {
