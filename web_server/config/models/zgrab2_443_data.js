@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z2_443_schema = require('./zgrab2_443_data_schema.js');
 const zgrab2_cert_path = 'data.http.result.response.request.tls_log.handshake_log.server_certificates.';
 
@@ -77,7 +78,7 @@ module.exports = {
         } else if (limit > 0 && page > 0) {
             promise = z2_443_schema.zgrab2_443_model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z2_443_schema.zgrab2_443_model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
+            promise = z2_443_schema.zgrab2_443_model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
         }
         return (promise);
     },
