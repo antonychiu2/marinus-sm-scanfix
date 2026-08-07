@@ -167,7 +167,7 @@ module.exports = {
     },
     getSSLByValidityYearPromise: function (year) {
         let thisDecade = new RegExp('^' + year + '.*');
-        return z2PortSchema.zgrab2PortModel.find({ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.validity.end': thisDecade },
+        return z2PortSchema.zgrab2PortModel.find({ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: thisDecade }).data },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByCorpNamePromise: function (internalDomain, count) {
