@@ -32,7 +32,7 @@ module.exports = {
         if (count) {
             promise = cSchema.censysModel.countDocuments({ 'zones': zone }).exec();
         } else {
-            promise = cSchema.censysModel.find({ 'zones': zone }).exec();
+            promise = cSchema.censysModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         }
         return (promise);
     },
