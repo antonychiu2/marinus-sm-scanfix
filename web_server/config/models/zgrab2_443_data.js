@@ -723,7 +723,7 @@ module.exports = {
         return z2_443_schema.zgrab2_443_model.find(query).select(headerQuery + ' zones domain ip').exec();
     },
     getUnknownHttpHeaderByValuePromise: function (value, zone) {
-        let query = { 'data.http.result.response.headers.unknown.value': value };
+        let query = { 'data.http.result.response.headers.unknown.value': mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
