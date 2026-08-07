@@ -27,7 +27,7 @@ module.exports = {
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
-            return z2_80_schema.zgrab2_80_model.find({ 'ip': ip }).countDocuments().exec();
+            return z2_80_schema.zgrab2_80_model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
         return z2_80_schema.zgrab2_80_model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
