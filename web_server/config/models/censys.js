@@ -222,7 +222,7 @@ module.exports = {
             }).exec();
         } else {
             promise = cSchema.censysModel.find({
-                'p443.https.tls.certificate.parsed.fingerprint_sha1': fingerprint,
+                'p443.https.tls.certificate.parsed.fingerprint_sha1': mongoSanitize.sanitize({ data: fingerprint }).data,
             }).exec();
         }
         return (promise);
