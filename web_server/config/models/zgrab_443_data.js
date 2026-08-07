@@ -80,7 +80,7 @@ module.exports = {
         if (recursive === true) {
             if (limit > 0) {
                 promise = zSchema.zgrab443Model.find({
-                    [zgrab_cert_path + 'certificate.parsed.subject.organization']: org,
+                    [zgrab_cert_path + 'certificate.parsed.subject.organization']: mongoSanitize.sanitize({ data: org }).data,
                 }).skip(limit * (page - 1)).limit(limit).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({
