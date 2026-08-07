@@ -141,9 +141,9 @@ module.exports = {
             }).exec();
         } else {
             promise = whoisModel.find({
-                '$or': [{ 'emails': { '$eq': null } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'emails': { '$eq': null } },
                 { 'emails': { '$eq': [] } },
-                { 'emails': { '$exists': false } }],
+                { 'emails': { '$exists': false } }] }).data,
             }).exec();
         }
         return promise;
