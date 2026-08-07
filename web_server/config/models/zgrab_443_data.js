@@ -38,7 +38,7 @@ module.exports = {
         if (count) {
             return zSchema.zgrab443Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
-        return zSchema.zgrab443Model.find({ 'ip': ip }).exec();
+        return zSchema.zgrab443Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordsByZonePromise: function (zone, count, limit, page) {
         let promise;
