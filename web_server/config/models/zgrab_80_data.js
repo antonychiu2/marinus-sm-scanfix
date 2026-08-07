@@ -36,7 +36,7 @@ module.exports = {
         if (count) {
             promise = z80Schema.zgrab80Model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
-            promise = z80Schema.zgrab80Model.find({ 'zones': zone }).exec();
+            promise = z80Schema.zgrab80Model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         }
         return (promise);
     },
