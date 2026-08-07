@@ -218,7 +218,7 @@ module.exports = {
         let promise;
         if (count) {
             promise = cSchema.censysModel.countDocuments({
-                'p443.https.tls.certificate.parsed.fingerprint_sha1': fingerprint,
+                'p443.https.tls.certificate.parsed.fingerprint_sha1': mongoSanitize.sanitize({ data: fingerprint }).data,
             }).exec();
         } else {
             promise = cSchema.censysModel.find({
