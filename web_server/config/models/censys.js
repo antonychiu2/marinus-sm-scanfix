@@ -115,7 +115,7 @@ module.exports = {
     getSSLByValidity2kPromise: function () {
         let isBefore2010 = new RegExp('^200.*');
         return cSchema.censysModel.find({
-            'p443.https.tls.certificate.parsed.validity.end': isBefore2010,
+            'p443.https.tls.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: isBefore2010 }).data,
         }, { 'ip': 1, 'p443': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
