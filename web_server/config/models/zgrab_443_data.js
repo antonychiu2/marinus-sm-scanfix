@@ -46,7 +46,7 @@ module.exports = {
             promise = zSchema.zgrab443Model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
             if (limit > 0) {
-                promise = zSchema.zgrab443Model.find({ 'zones': zone }).skip(limit * (page - 1)).limit(limit).exec();
+                promise = zSchema.zgrab443Model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).skip(limit * (page - 1)).limit(limit).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
             }
