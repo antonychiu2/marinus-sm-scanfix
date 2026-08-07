@@ -30,7 +30,7 @@ module.exports = {
     getRecordsByZonePromise: function (zone, count) {
         let promise;
         if (count) {
-            promise = cSchema.censysModel.countDocuments({ 'zones': zone }).exec();
+            promise = cSchema.censysModel.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
             promise = cSchema.censysModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         }
