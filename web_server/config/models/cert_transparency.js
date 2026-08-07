@@ -217,7 +217,7 @@ module.exports = {
   getCertByCTLog: function (logName, count) {
     let promise;
     if (count === true) {
-      promise = certTransModel.countDocuments({ 'sources': logName }).exec();
+      promise = certTransModel.countDocuments({ 'sources': mongoSanitize.sanitize({ data: logName }).data }).exec();
     } else {
       promise = certTransModel.find({ 'sources': mongoSanitize.sanitize({ data: logName }).data }).exec();
     }
