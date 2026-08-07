@@ -289,7 +289,7 @@ module.exports = {
             }).exists('pcaps').countDocuments().exec();
         } else {
             promise = virustotalModel.find({
-                'pcaps': { '$ne': [] },
+                'pcaps': mongoSanitize.sanitize({ data: { '$ne': [] } }).data,
             }, {
                 'pcaps': 1,
                 'zone': 1,
