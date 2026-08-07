@@ -96,11 +96,11 @@ module.exports = {
             }, { 'ip': 1, 'p443': 1 }).countDocuments().exec();
         } else {
             promise = cSchema.censysModel.find({
-                '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reZone },
+                '$or': mongoSanitize.sanitize({ data: [{ 'p443.https.tls.certificate.parsed.subject.common_name': reZone },
                 { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reZone },
                 { 'p443.https.tls.certificate.parsed.subject.common_name': zone },
                 { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': zone },
-                ]
+                ] }).data
             }, { 'ip': 1, 'p443': 1 }).exec();
         }
         return (promise);
