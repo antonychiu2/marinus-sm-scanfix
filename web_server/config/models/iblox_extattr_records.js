@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -40,9 +41,9 @@ module.exports = {
      */
     getIBHostExtattr: function (value) {
         return extattrModel.find({
-            $and: [
+            $and: mongoSanitize.sanitize({ data: [
                 { $or: [{ 'record_type': 'cname' }, { 'record_type': 'host' }] },
-                { 'value': value }]
+                { 'value': value }] }).data
         }, { 'extattrs': 1 }).exec();
     },
     /**
