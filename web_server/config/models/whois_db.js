@@ -96,7 +96,7 @@ module.exports = {
         }
         let promise;
         if (count) {
-            promise = whoisModel.countDocuments({ 'dnssec': query }).exec();
+            promise = whoisModel.countDocuments({ 'dnssec': mongoSanitize.sanitize({ data: query }).data }).exec();
         } else {
             promise = whoisModel.find({ 'dnssec': query }).exec();
         }
