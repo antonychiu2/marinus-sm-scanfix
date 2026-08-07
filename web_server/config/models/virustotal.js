@@ -232,7 +232,7 @@ module.exports = {
         let promise;
         if (count) {
             promise = virustotalModel.find({
-                'zone': zone,
+                'zone': mongoSanitize.sanitize({ data: zone }).data,
                 'detected_urls': { '$ne': [] },
             }).exists('detected_urls').countDocuments().exec();
         } else {
