@@ -270,7 +270,7 @@ module.exports = {
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_createdate': { "$lt": new Date(marinus_createdate) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$lt": new Date(marinus_createdate) } }).data,
       }).exec();
     }
     return promise;
