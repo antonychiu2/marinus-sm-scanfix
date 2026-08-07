@@ -191,7 +191,7 @@ module.exports = {
         }
         if (count) {
             promise = cSchema.censysModel.find({
-                'p443': { '$exists': true },
+                'p443': mongoSanitize.sanitize({ data: { '$exists': true } }).data,
                 'p443.https.heartbleed.heartbleed_vulnerable': true,
                 'p443.https.tls.certificate.parsed.subject.organization': { '$in': orgArray }
             }).countDocuments().exec();
