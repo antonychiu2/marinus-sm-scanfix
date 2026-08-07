@@ -53,7 +53,7 @@ module.exports = {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({ "domains": domain }).countDocuments().exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ "domains": domain }).exec();
+                return zPortSchema.zgrabPortModel.find({ "domains": mongoSanitize.sanitize({ data: domain }).data }).exec();
             }
         } else if (port === "25") {
             if (count) {
