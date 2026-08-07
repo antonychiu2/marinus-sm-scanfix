@@ -85,7 +85,7 @@ module.exports = {
     getIPListPromise: function (count, limit, page,) {
         let promise;
         if (count) {
-            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "ip": { "$ne": "<nil>" } }).exec();
+            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
             promise = z2_443_schema.zgrab2_443_model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
