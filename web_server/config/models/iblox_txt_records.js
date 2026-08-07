@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -52,7 +53,7 @@ module.exports = {
         let reTxt = new RegExp('.*' + regex + '.*');
 
         return txtModel.find({
-            'text': { '$regex': reTxt },
+            'text': mongoSanitize.sanitize({ data: { '$regex': reTxt } }).data,
         });
     },
     getIBTXTCountPromise: function (zone) {
