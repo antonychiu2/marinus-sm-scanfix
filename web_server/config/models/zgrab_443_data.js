@@ -568,7 +568,7 @@ module.exports = {
             } else {
                 if (limit > 0 && page > 0) {
                     promise = zSchema.zgrab443Model.find({
-                        [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                        [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                     }).skip(limit * (page - 1)).limit(limit).exec();
                 } else {
                     promise = zSchema.zgrab443Model.find({
