@@ -22,7 +22,7 @@ module.exports = {
         if (count) {
             return z2_80_schema.zgrab2_80_model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec();
         } else {
-            return z2_80_schema.zgrab2_80_model.find({ 'domain': domain }).exec();
+            return z2_80_schema.zgrab2_80_model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).exec();
         }
     },
     getRecordByIPPromise: function (ip, count) {
