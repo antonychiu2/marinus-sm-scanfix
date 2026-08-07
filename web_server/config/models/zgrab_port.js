@@ -108,7 +108,7 @@ module.exports = {
         } else if (port === "25") {
             return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.smtp").exec();
         } else if (port === "443") {
-            return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.tls").exec();
+            return zPortSchema.zgrabPortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.tls").exec();
         } else if (port === "465") {
             return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.smtps").exec();
         } else if (count) {
