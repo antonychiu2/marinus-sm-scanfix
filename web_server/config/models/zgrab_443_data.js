@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const zSchema = require('./zgrab_443_data_schema.js');
 const zgrab_cert_path = 'data.http.response.request.tls_handshake.server_certificates.';
 
@@ -35,7 +36,7 @@ module.exports = {
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
-            return zSchema.zgrab443Model.find({ 'ip': ip }).countDocuments().exec();
+            return zSchema.zgrab443Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
         return zSchema.zgrab443Model.find({ 'ip': ip }).exec();
     },
