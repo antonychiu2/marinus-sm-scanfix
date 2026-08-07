@@ -35,7 +35,7 @@ module.exports = {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.tls').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.tls': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.tls': 1 }).exec();
             }
         } else if (port === "465") {
             if (count) {
