@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -113,10 +114,10 @@ module.exports = {
             }).exec();
         } else {
             promise = whoisModel.find({
-                '$or': [{ 'dnssec': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'dnssec': { '$exists': false } },
                 { 'dnssec': false },
                 { 'dnssec': query },
-                { 'dnssec': null }],
+                { 'dnssec': null }] }).data,
             }).exec();
         }
         return promise;
