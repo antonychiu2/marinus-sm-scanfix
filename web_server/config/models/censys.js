@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const cSchema = require('./censys_schema2');
 
 // CensysModel
@@ -149,7 +150,7 @@ module.exports = {
         let promise;
         if (count === true) {
             promise = cSchema.censysModel.find({
-                'p443.https.tls.certificate.parsed.signature.signature_algorithm.name': algorithm,
+                'p443.https.tls.certificate.parsed.signature.signature_algorithm.name': mongoSanitize.sanitize({ data: algorithm }).data,
             }).countDocuments().exec();
         } else {
             promise = cSchema.censysModel.find({
