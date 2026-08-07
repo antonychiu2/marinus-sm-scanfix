@@ -354,7 +354,7 @@ module.exports = {
         if (recursive === true) {
             if (count === true) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
