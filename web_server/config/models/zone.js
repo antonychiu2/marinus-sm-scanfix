@@ -35,7 +35,7 @@ module.exports = {
     ZoneModel: zoneModel,
     getZoneByNamePromise: function (name) {
         return zoneModel.findOne({
-            'zone': name,
+            'zone': mongoSanitize.sanitize({ data: name }).data,
         }).exec();
     },
     getZoneByIBloxNamePromise: function (name) {
