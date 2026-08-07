@@ -133,7 +133,7 @@ module.exports = {
     },
     getSSLOrgCountPromise: function (org) {
         return cSchema.censysModel.find({
-            'p443.https.tls.certificate.parsed.subject.organization': org,
+            'p443.https.tls.certificate.parsed.subject.organization': mongoSanitize.sanitize({ data: org }).data,
         }).countDocuments().exec();
     },
     getSSLProtocolCountPromise: function (protocol) {
