@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -33,12 +34,12 @@ module.exports = {
     CnameModel: cnameModel,
     getIBCNameByZonePromise: function (zone) {
         return cnameModel.find({
-            'zone': zone,
+            'zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBCNameByIBloxZonePromise: function (zone) {
         return cnameModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBCNameByNamePromise: function (name) {
@@ -60,12 +61,12 @@ module.exports = {
         let promise;
         if (zone) {
             promise = cnameModel.find({
-                'canonical': { '$regex': reSearch },
+                'canonical': mongoSanitize.sanitize({ data: { '$regex': reSearch } }).data,
                 'zone': zone,
             }).exec();
         } else {
             promise = cnameModel.find({
-                'canonical': { '$regex': reSearch },
+                'canonical': mongoSanitize.sanitize({ data: { '$regex': reSearch } }).data,
             }).exec();
         }
         return promise;

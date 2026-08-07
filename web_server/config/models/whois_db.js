@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -46,7 +47,7 @@ module.exports = {
     WhoisModel: whoisModel,
     getRecordByZonePromise: function (zone) {
         return whoisModel.findOne({
-            'zone': zone,
+            'zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getWhoisDNSServerRecords: function (server, count) {
@@ -54,10 +55,10 @@ module.exports = {
         let promise;
         if (count) {
             promise = whoisModel.countDocuments({
-                'name_servers': reServer,
+                'name_servers': mongoSanitize.sanitize({ data: reServer }).data,
             }).exec();
         } else {
-            promise = whoisModel.find({ 'name_servers': reServer }).exec();
+            promise = whoisModel.find({ 'name_servers': mongoSanitize.sanitize({ data: reServer }).data }).exec();
         }
         return promise;
     },
@@ -65,15 +66,15 @@ module.exports = {
         let promise;
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'name_servers': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'name_servers': { '$exists': false } },
                 { 'name_servers': [] },
-                { 'name_servers': null }],
+                { 'name_servers': null }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
-                '$or': [{ 'name_servers': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'name_servers': { '$exists': false } },
                 { 'name_servers': [] },
-                { 'name_servers': null }],
+                { 'name_servers': null }] }).data,
             }).exec();
         }
         return promise;
@@ -95,9 +96,9 @@ module.exports = {
         }
         let promise;
         if (count) {
-            promise = whoisModel.countDocuments({ 'dnssec': query }).exec();
+            promise = whoisModel.countDocuments({ 'dnssec': mongoSanitize.sanitize({ data: query }).data }).exec();
         } else {
-            promise = whoisModel.find({ 'dnssec': query }).exec();
+            promise = whoisModel.find({ 'dnssec': mongoSanitize.sanitize({ data: query }).data }).exec();
         }
         return promise;
     },
@@ -106,17 +107,17 @@ module.exports = {
         let query = new RegExp('^(n|no)$', 'i');
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'dnssec': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'dnssec': { '$exists': false } },
                 { 'dnssec': false },
                 { 'dnssec': query },
-                { 'dnssec': null }],
+                { 'dnssec': null }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
-                '$or': [{ 'dnssec': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'dnssec': { '$exists': false } },
                 { 'dnssec': false },
                 { 'dnssec': query },
-                { 'dnssec': null }],
+                { 'dnssec': null }] }).data,
             }).exec();
         }
         return promise;
@@ -124,9 +125,9 @@ module.exports = {
     getWhoisEmailRecords: function (email, count) {
         let promise;
         if (count) {
-            promise = whoisModel.countDocuments({ 'emails': email }).exec();
+            promise = whoisModel.countDocuments({ 'emails': mongoSanitize.sanitize({ data: email }).data }).exec();
         } else {
-            promise = whoisModel.find({ 'emails': email }).exec();
+            promise = whoisModel.find({ 'emails': mongoSanitize.sanitize({ data: email }).data }).exec();
         }
         return promise;
     },
@@ -134,15 +135,15 @@ module.exports = {
         let promise;
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'emails': { '$eq': null } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'emails': { '$eq': null } },
                 { 'emails': { '$eq': [] } },
-                { 'emails': { '$exists': false } }],
+                { 'emails': { '$exists': false } }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
-                '$or': [{ 'emails': { '$eq': null } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'emails': { '$eq': null } },
                 { 'emails': { '$eq': [] } },
-                { 'emails': { '$exists': false } }],
+                { 'emails': { '$exists': false } }] }).data,
             }).exec();
         }
         return promise;

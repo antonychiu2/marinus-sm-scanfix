@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -34,7 +35,7 @@ module.exports = {
     GroupModel: groupModel,
     getGroupByNamePromise: function (name) {
         return groupModel.findOne({
-            'name': name,
+            'name': mongoSanitize.sanitize({ data: name }).data,
         }).exec();
     },
     getAllGroups: function () {
@@ -46,7 +47,7 @@ module.exports = {
             limitQuery = { 'name': 1 };
         }
         return groupModel.find({
-            'members': userid,
+            'members': mongoSanitize.sanitize({ data: userid }).data,
         }, limitQuery).exec();
     },
 };

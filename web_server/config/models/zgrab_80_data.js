@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z80Schema = require('./zgrab_80_data_schema.js');
 
 // zgrab port 80 Module
@@ -19,45 +20,45 @@ module.exports = {
     zgrabModel: z80Schema.zgrab80Model,
     getRecordByDomainPromise: function (domain, count) {
         if (count) {
-            return z80Schema.zgrab80Model.find({ 'domain': domain }).countDocuments().exec();
+            return z80Schema.zgrab80Model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec();
         } else {
-            return z80Schema.zgrab80Model.find({ 'domain': domain }).exec();
+            return z80Schema.zgrab80Model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).exec();
         }
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
-            return z80Schema.zgrab80Model.find({ 'ip': ip }).countDocuments().exec();
+            return z80Schema.zgrab80Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
-        return z80Schema.zgrab80Model.find({ 'ip': ip }).exec();
+        return z80Schema.zgrab80Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordsByZonePromise: function (zone, count) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ 'zones': zone }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
-            promise = z80Schema.zgrab80Model.find({ 'zones': zone }).exec();
+            promise = z80Schema.zgrab80Model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         }
         return (promise);
     },
     getDomainListPromise: function (count, limit, page) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ "domain": { "$ne": "<nil>" } }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
-            promise = z80Schema.zgrab80Model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
+            promise = z80Schema.zgrab80Model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z80Schema.zgrab80Model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
+            promise = z80Schema.zgrab80Model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
         }
         return (promise);
     },
     getIPListPromise: function (count, limit, page) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ "ip": { "$ne": "<nil>" } }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
-            promise = z80Schema.zgrab80Model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1 }).skip(limit * (page - 1)).limit(limit).exec();
+            promise = z80Schema.zgrab80Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z80Schema.zgrab80Model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1 }).exec();
+            promise = z80Schema.zgrab80Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1 }).exec();
         }
         return (promise);
     },
@@ -76,7 +77,7 @@ module.exports = {
         return (promise);
     },
     getUnknownHttpHeaderPromise: function (header, zone, count) {
-        let query = { 'data.http.response.headers.unknown.key': header };
+        let query = { 'data.http.response.headers.unknown.key': mongoSanitize.sanitize({ data: header }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
@@ -90,14 +91,14 @@ module.exports = {
     },
     getHttpHeaderByValuePromise: function (header, value, zone) {
         let headerQuery = 'data.http.response.headers.' + header;
-        let query = { [headerQuery]: value };
+        let query = { [headerQuery]: mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
         return z80Schema.zgrab80Model.find(query).select(headerQuery + ' zones ip domain').exec();
     },
     getUnknownHttpHeaderByValuePromise: function (header, value, zone) {
-        let query = { 'data.http.response.headers.unknown.value': value };
+        let query = { 'data.http.response.headers.unknown.value': mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }

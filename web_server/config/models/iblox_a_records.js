@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -33,28 +34,28 @@ module.exports = {
     IPAddrModel: ipAddrModel,
     getIBAddrByZonePromise: function (zone) {
         return ipAddrModel.find({
-            'zone': zone,
+            'zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBAddrByIBloxZonePromise: function (zone) {
         return ipAddrModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBAddrByNamePromise: function (name) {
         return ipAddrModel.find({
-            'name': name,
+            'name': mongoSanitize.sanitize({ data: name }).data,
         }).exec();
     },
     getIBAddrByIPPromise: function (ip) {
         return ipAddrModel.find({
-            'ipv4addr': ip,
+            'ipv4addr': mongoSanitize.sanitize({ data: ip }).data,
         }).exec();
     },
     getIBAddrByIPRangePromise: function (ipRange) {
         let reZone = new RegExp('^' + ipRange + '\\..*');
         return ipAddrModel.find({
-            'ipv4addr': { '$regex': reZone },
+            'ipv4addr': mongoSanitize.sanitize({ data: { '$regex': reZone } }).data,
         }).exec();
     },
     getIBAddrCountPromise: function (zone) {

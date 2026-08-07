@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z2_443_schema = require('./zgrab2_443_data_schema.js');
 const zgrab2_cert_path = 'data.http.result.response.request.tls_log.handshake_log.server_certificates.';
 
@@ -31,23 +32,23 @@ const zgrab2_cert_path = 'data.http.result.response.request.tls_log.handshake_lo
 module.exports = {
     zgrab2Model: z2_443_schema.zgrab2_443_model,
     getRecordByDomainPromise: function (domain) {
-        return z2_443_schema.zgrab2_443_model.find({ 'domain': domain }).exec();
+        return z2_443_schema.zgrab2_443_model.find({ 'domain': mongoSanitize.sanitize({ data: domain }).data }).exec();
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
-            return z2_443_schema.zgrab2_443_model.find({ 'ip': ip }).countDocuments().exec();
+            return z2_443_schema.zgrab2_443_model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
-        return z2_443_schema.zgrab2_443_model.find({ 'ip': ip }).exec();
+        return z2_443_schema.zgrab2_443_model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordsByZonePromise: function (zone, count, limit, page) {
         let promise;
         if (count) {
-            promise = z2_443_schema.zgrab2_443_model.countDocuments({ 'zones': zone }).exec();
+            promise = z2_443_schema.zgrab2_443_model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
             if (limit > 0) {
-                promise = z2_443_schema.zgrab2_443_model.find({ 'zones': zone }).skip(limit * (page - 1)).limit(limit).exec();
+                promise = z2_443_schema.zgrab2_443_model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).skip(limit * (page - 1)).limit(limit).exec();
             } else {
-                promise = z2_443_schema.zgrab2_443_model.find({ 'zones': zone }).exec();
+                promise = z2_443_schema.zgrab2_443_model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
             }
         }
         return (promise);
@@ -73,22 +74,22 @@ module.exports = {
     getDomainListPromise: function (count, limit, page) {
         let promise;
         if (count) {
-            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "domain": { "$ne": "<nil>" } }).exec();
+            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
-            promise = z2_443_schema.zgrab2_443_model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
+            promise = z2_443_schema.zgrab2_443_model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z2_443_schema.zgrab2_443_model.find({ "domain": { "$ne": "<nil>" } }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
+            promise = z2_443_schema.zgrab2_443_model.find({ "domain": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "domain": 1, "zones": 1 }).exec();
         }
         return (promise);
     },
     getIPListPromise: function (count, limit, page,) {
         let promise;
         if (count) {
-            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "ip": { "$ne": "<nil>" } }).exec();
+            promise = z2_443_schema.zgrab2_443_model.countDocuments({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
-            promise = z2_443_schema.zgrab2_443_model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).skip(limit * (page - 1)).limit(limit).exec();
+            promise = z2_443_schema.zgrab2_443_model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z2_443_schema.zgrab2_443_model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).exec();
+            promise = z2_443_schema.zgrab2_443_model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).exec();
         }
         return (promise);
     },
@@ -97,11 +98,11 @@ module.exports = {
         if (recursive === true) {
             if (limit > 0) {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.subject.organization']: org,
+                    [zgrab2_cert_path + 'certificate.parsed.subject.organization']: mongoSanitize.sanitize({ data: org }).data,
                 }).skip(limit * (page - 1)).limit(limit).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.subject.organization']: org,
+                    [zgrab2_cert_path + 'certificate.parsed.subject.organization']: mongoSanitize.sanitize({ data: org }).data,
                 }).exec();
             }
         } else {
@@ -137,8 +138,8 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.find({
-                '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: commonName },
-                { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: commonName }],
+                '$or': mongoSanitize.sanitize({ data: [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: commonName },
+                { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: commonName }] }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
@@ -170,11 +171,11 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: serialNumber
+                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: mongoSanitize.sanitize({ data: serialNumber }).data
                 }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: serialNumber
+                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: mongoSanitize.sanitize({ data: serialNumber }).data
                 }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
             }
         } else {
@@ -216,18 +217,18 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
+                    '$or': mongoSanitize.sanitize({ data: [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: zone },
-                    { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: zone }],
+                    { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: zone }] }).data,
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
+                    '$or': mongoSanitize.sanitize({ data: [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: zone },
                     { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: zone },
-                    ]
+                    ] }).data
                 }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
             }
         } else {
@@ -287,7 +288,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.find({
-                [zgrab2_cert_path + 'certificate.parsed.validity.end']: isBefore2010,
+                [zgrab2_cert_path + 'certificate.parsed.validity.end']: mongoSanitize.sanitize({ data: isBefore2010 }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
@@ -309,7 +310,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.find({
-                [zgrab2_cert_path + 'certificate.parsed.validity.end']: thisDecade,
+                [zgrab2_cert_path + 'certificate.parsed.validity.end']: mongoSanitize.sanitize({ data: thisDecade }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
@@ -330,7 +331,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                [zgrab2_cert_path + 'certificate.parsed.subject.organization']: org,
+                [zgrab2_cert_path + 'certificate.parsed.subject.organization']: mongoSanitize.sanitize({ data: org }).data,
             }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
@@ -353,11 +354,11 @@ module.exports = {
         if (recursive === true) {
             if (count === true) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                 }, {
                     'ip': 1,
                     'domain': 1,
@@ -419,13 +420,13 @@ module.exports = {
         if (recursive === true) {
             if (count === true) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                     '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone }]
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                     '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone }]
                 },
@@ -503,11 +504,11 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha1']: fingerprint,
+                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha1']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha1']: fingerprint,
+                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha1']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             }
         } else {
@@ -545,11 +546,11 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha256']: fingerprint,
+                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha256']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha256']: fingerprint,
+                    [zgrab2_cert_path + 'certificate.parsed.fingerprint_sha256']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             }
         } else {
@@ -628,16 +629,16 @@ module.exports = {
         if (recursive === true) {
             if (count === true) {
                 promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                    [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                    [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                 }).exec();
             } else {
                 if (limit > 0 && page > 0) {
                     promise = z2_443_schema.zgrab2_443_model.find({
-                        [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                        [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                     }).skip(limit * (page - 1)).limit(limit).exec();
                 } else {
                     promise = z2_443_schema.zgrab2_443_model.find({
-                        [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                        [zgrab2_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                     }).exec();
                 }
             }
@@ -701,7 +702,7 @@ module.exports = {
         return (promise);
     },
     getUnknownHttpHeaderPromise: function (header, zone, count) {
-        let query = { 'data.http.result.response.headers.unknown.key': header };
+        let query = { 'data.http.result.response.headers.unknown.key': mongoSanitize.sanitize({ data: header }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
@@ -715,14 +716,14 @@ module.exports = {
     },
     getHttpHeaderByValuePromise: function (header, value, zone) {
         let headerQuery = 'data.http.result.response.headers.' + header;
-        let query = { [headerQuery]: value };
+        let query = { [headerQuery]: mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
         return z2_443_schema.zgrab2_443_model.find(query).select(headerQuery + ' zones domain ip').exec();
     },
     getUnknownHttpHeaderByValuePromise: function (value, zone) {
-        let query = { 'data.http.result.response.headers.unknown.value': value };
+        let query = { 'data.http.result.response.headers.unknown.value': mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }

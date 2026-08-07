@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const zPortSchema = require('./zgrab_port_schema.js');
 
 // zgrab port scan module
@@ -20,100 +21,100 @@ module.exports = {
     getRecordByIPPromise: function (ip, port, count) {
         if (port === "22") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.xssh').exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.xssh').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.xssh': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.xssh': 1 }).exec();
             }
         } else if (port === "25") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.smtp').exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.smtp').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.smtp': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.smtp': 1 }).exec();
             }
         } else if (port === "443") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.tls').exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.tls').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.tls': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.tls': 1 }).exec();
             }
         } else if (port === "465") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.smtps').exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.smtps').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.smtps': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
         } else if (count) {
-            return zPortSchema.zgrabPortModel.find({ 'ip': ip }).countDocuments().exec()
+            return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec()
         }
-        return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exec();
+        return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordByDomainPromise: function (domain, port, count) {
         if (port === "22") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ "domains": domain }).countDocuments().exec();
+                return zPortSchema.zgrabPortModel.find({ "domains": mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ "domains": domain }).exec();
+                return zPortSchema.zgrabPortModel.find({ "domains": mongoSanitize.sanitize({ data: domain }).data }).exec();
             }
         } else if (port === "25") {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.smtp.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.smtp.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.smtp.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }).countDocuments().exec();
             } else {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.smtp.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.smtp.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.smtp.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }, { 'ip': 1, 'data.smtp': 1 }).exec();
             }
         } else if (port === "443") {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }).countDocuments().exec();
             } else {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }, { 'ip': 1, 'data.tls': 1 }).exec();
             }
         } else if (port === "465") {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.smtps.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.smtps.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.smtps.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }).countDocuments().exec();
             } else {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.smtps.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.smtps.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.smtps.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
         } else if (count) {
-            return (zPortSchema.zgrabPortModel.find({ 'domains': domain }).countDocuments().exec());
+            return (zPortSchema.zgrabPortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec());
         }
-        return (zPortSchema.zgrabPortModel.find({ 'domains': domain }).exec());
+        return (zPortSchema.zgrabPortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).exec());
     },
     getRecordByZonePromise: function (zone, port, count) {
         if (port === "22") {
-            return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.xssh").exec();
+            return zPortSchema.zgrabPortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.xssh").exec();
         } else if (port === "25") {
-            return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.smtp").exec();
+            return zPortSchema.zgrabPortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.smtp").exec();
         } else if (port === "443") {
-            return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.tls").exec();
+            return zPortSchema.zgrabPortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.tls").exec();
         } else if (port === "465") {
-            return zPortSchema.zgrabPortModel.find({ "zones": zone }).exists("data.smtps").exec();
+            return zPortSchema.zgrabPortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.smtps").exec();
         } else if (count) {
-            return zPortSchema.zgrabPortModel.find({ 'zones': zone }).countDocuments().exec();
+            return zPortSchema.zgrabPortModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).countDocuments().exec();
         }
-        return zPortSchema.zgrabPortModel.find({ 'zones': zone }).exec();
+        return zPortSchema.zgrabPortModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
     },
     getTLSIPListPromise: function (count, limit, page) {
         if (count) {
@@ -161,19 +162,19 @@ module.exports = {
     },
     getSSLByValidity2kPromise: function () {
         let isBefore2010 = new RegExp('^200.*');
-        return zPortSchema.zgrabPortModel.find({ 'data.tls.server_certificates.certificate.parsed.validity.end': isBefore2010 },
+        return zPortSchema.zgrabPortModel.find({ 'data.tls.server_certificates.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: isBefore2010 }).data },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
         let thisDecade = new RegExp('^' + year + '.*');
-        return zPortSchema.zgrabPortModel.find({ 'data.tls.server_certificates.certificate.parsed.validity.end': thisDecade },
+        return zPortSchema.zgrabPortModel.find({ 'data.tls.server_certificates.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: thisDecade }).data },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByCorpNamePromise: function (internalDomain) {
         let reCorp = new RegExp('^.*\.' + internalDomain);
         return zPortSchema.zgrabPortModel.find({
-            '$or': [{ 'data.tls.server_certificates.certificate.parsed.subject.common_name': reCorp },
-            { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
+            '$or': mongoSanitize.sanitize({ data: [{ 'data.tls.server_certificates.certificate.parsed.subject.common_name': reCorp },
+            { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }] }).data,
         }, { 'ip': 1, 'data.tls': 1 }).exec();
     },
     getFullCountPromise: function () {

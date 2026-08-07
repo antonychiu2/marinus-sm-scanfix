@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -65,7 +66,7 @@ module.exports = {
   CertTransModel: certTransModel,
   getCertTransOrgPromise: function (org) {
     return certTransModel.find({
-      'subject_organization_name': { $in: org },
+      'subject_organization_name': mongoSanitize.sanitize({ data: { $in: org } }).data,
     }).exec();
   },
   getCertTransCNPromise: function (domain) {
@@ -78,9 +79,9 @@ module.exports = {
   getCertTransZonePromise: function (zone, count) {
     let promise;
     if (count) {
-      promise = certTransModel.find({ 'zones': zone }).countDocuments().exec();
+      promise = certTransModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).countDocuments().exec();
     } else {
-      promise = certTransModel.find({ 'zones': zone }).exec();
+      promise = certTransModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
     }
     return promise;
   },
@@ -90,27 +91,27 @@ module.exports = {
     if (excludeExpired != null && excludeExpired === true) {
       if (count) {
         promise = certTransModel.find({
-          '$or': [{ 'subject_common_names': reCorp },
-          { 'subject_dns_names': reCorp }],
+          '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+          { 'subject_dns_names': reCorp }] }).data,
           'isExpired': false
         }).countDocuments().exec();
       } else {
         promise = certTransModel.find({
-          '$or': [{ 'subject_common_names': reCorp },
-          { 'subject_dns_names': reCorp }],
+          '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+          { 'subject_dns_names': reCorp }] }).data,
           'isExpired': false
         }).exec();
       }
     } else {
       if (count) {
         promise = certTransModel.find({
-          '$or': [{ 'subject_common_names': reCorp },
-          { 'subject_dns_names': reCorp }]
+          '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+          { 'subject_dns_names': reCorp }] }).data
         }).countDocuments().exec();
       } else {
         promise = certTransModel.find({
-          '$or': [{ 'subject_common_names': reCorp },
-          { 'subject_dns_names': reCorp }]
+          '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+          { 'subject_dns_names': reCorp }] }).data
         }).exec();
       }
     }
@@ -118,7 +119,7 @@ module.exports = {
   },
   getCertTransIPPromise: function (ip) {
     return certTransModel.find({
-      'subject_ip_addresses': ip,
+      'subject_ip_addresses': mongoSanitize.sanitize({ data: ip }).data,
     }).exec();
   },
   getCertTransById: function (id) {
@@ -130,14 +131,14 @@ module.exports = {
     }
 
     if (count) {
-      return certTransModel.countDocuments({ 'serial_number': serial_number.toLowerCase() }).exec();
+      return certTransModel.countDocuments({ 'serial_number': mongoSanitize.sanitize({ data: serial_number.toLowerCase() }).data }).exec();
     }
 
-    return certTransModel.find({ 'serial_number': serial_number.toLowerCase() }).exec();
+    return certTransModel.find({ 'serial_number': mongoSanitize.sanitize({ data: serial_number.toLowerCase() }).data }).exec();
   },
   getCertTransIssuers: function (issuer, count, excludeExpired) {
     let promise;
-    let query = { 'issuer_common_name': issuer }
+    let query = { 'issuer_common_name': mongoSanitize.sanitize({ data: issuer }).data }
     if (excludeExpired != null && excludeExpired === true) {
       query['isExpired'] = false;
     }
@@ -152,7 +153,7 @@ module.exports = {
     let foo = [];
     foo.push(org);
     return certTransModel.countDocuments({
-      'subject_organization_name': { '$in': foo },
+      'subject_organization_name': mongoSanitize.sanitize({ data: { '$in': foo } }).data,
       'isExpired': false,
     }).exec();
   },
@@ -160,12 +161,12 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'signature_algorithm': algorithm,
+        'signature_algorithm': mongoSanitize.sanitize({ data: algorithm }).data,
         'isExpired': false
       }).exec();
     } else {
       promise = certTransModel.find({
-        'signature_algorithm': algorithm,
+        'signature_algorithm': mongoSanitize.sanitize({ data: algorithm }).data,
         'isExpired': false
       }).exec();
     }
@@ -183,8 +184,8 @@ module.exports = {
   getCorpCount: function (corp_domain) {
     let reCorp = new RegExp('^.*\.' + corp_domain);
     return certTransModel.find({
-      '$or': [{ 'subject_common_names': reCorp },
-      { 'subject_dns_names': reCorp }],
+      '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+      { 'subject_dns_names': reCorp }] }).data,
     }).countDocuments().exec();
   },
   getCertCount: function () {
@@ -206,19 +207,19 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'scts.log_name': logName,
+        'scts.log_name': mongoSanitize.sanitize({ data: logName }).data,
       }).exec();
     } else {
-      promise = certTransModel.find({ 'scts.log_name': logName }).exec();
+      promise = certTransModel.find({ 'scts.log_name': mongoSanitize.sanitize({ data: logName }).data }).exec();
     }
     return promise;
   },
   getCertByCTLog: function (logName, count) {
     let promise;
     if (count === true) {
-      promise = certTransModel.countDocuments({ 'sources': logName }).exec();
+      promise = certTransModel.countDocuments({ 'sources': mongoSanitize.sanitize({ data: logName }).data }).exec();
     } else {
-      promise = certTransModel.find({ 'sources': logName }).exec();
+      promise = certTransModel.find({ 'sources': mongoSanitize.sanitize({ data: logName }).data }).exec();
     }
     return promise;
   },
@@ -226,11 +227,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'fingerprint_sha1': fingerprintSha1,
+        'fingerprint_sha1': mongoSanitize.sanitize({ data: fingerprintSha1 }).data,
       }).exec();
     } else {
       promise = certTransModel.findOne({
-        'fingerprint_sha1': fingerprintSha1,
+        'fingerprint_sha1': mongoSanitize.sanitize({ data: fingerprintSha1 }).data,
       }).exec();
     }
     return promise;
@@ -239,11 +240,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'fingerprint_sha256': fingerprintSha256,
+        'fingerprint_sha256': mongoSanitize.sanitize({ data: fingerprintSha256 }).data,
       }).exec();
     } else {
       promise = certTransModel.findOne({
-        'fingerprint_sha256': fingerprintSha256,
+        'fingerprint_sha256': mongoSanitize.sanitize({ data: fingerprintSha256 }).data,
       }).exec();
     }
     return promise;
@@ -252,11 +253,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_createdate': { "$gt": new Date(marinus_createdate) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$gt": new Date(marinus_createdate) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_createdate': { "$gt": new Date(marinus_createdate) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$gt": new Date(marinus_createdate) } }).data,
       }).exec();
     }
     return promise;
@@ -265,11 +266,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_createdate': { "$lt": new Date(marinus_createdate) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$lt": new Date(marinus_createdate) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_createdate': { "$lt": new Date(marinus_createdate) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$lt": new Date(marinus_createdate) } }).data,
       }).exec();
     }
     return promise;
@@ -278,11 +279,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_createdate': { "$gt": new Date(start_date), "$lt": new Date(end_date) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$gt": new Date(start_date), "$lt": new Date(end_date) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_createdate': { "$gt": new Date(start_date), "$lt": new Date(end_date) },
+        'marinus_createdate': mongoSanitize.sanitize({ data: { "$gt": new Date(start_date), "$lt": new Date(end_date) } }).data,
       }).exec();
     }
     return promise;
@@ -291,11 +292,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_updated': { "$gt": new Date(marinus_updated) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$gt": new Date(marinus_updated) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_updated': { "$gt": new Date(marinus_updated) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$gt": new Date(marinus_updated) } }).data,
       }).exec();
     }
     return promise;
@@ -304,11 +305,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_updated': { "$lt": new Date(marinus_updated) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$lt": new Date(marinus_updated) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_updated': { "$lt": new Date(marinus_updated) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$lt": new Date(marinus_updated) } }).data,
       }).exec();
     }
     return promise;
@@ -317,11 +318,11 @@ module.exports = {
     let promise;
     if (count === true) {
       promise = certTransModel.countDocuments({
-        'marinus_updated': { "$gt": new Date(start_date), "$lt": new Date(end_date) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$gt": new Date(start_date), "$lt": new Date(end_date) } }).data,
       }).exec();
     } else {
       promise = certTransModel.find({
-        'marinus_updated': { "$gt": new Date(start_date), "$lt": new Date(end_date) },
+        'marinus_updated': mongoSanitize.sanitize({ data: { "$gt": new Date(start_date), "$lt": new Date(end_date) } }).data,
       }).exec();
     }
     return promise;
