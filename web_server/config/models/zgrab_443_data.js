@@ -244,7 +244,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = zSchema.zgrab443Model.find({
-                [zgrab_cert_path + 'certificate.parsed.validity.end']: thisDecade,
+                [zgrab_cert_path + 'certificate.parsed.validity.end']: mongoSanitize.sanitize({ data: thisDecade }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = zSchema.zgrab443Model.aggregate([{
