@@ -206,13 +206,13 @@ module.exports = function (envConfig) {
         .get(function (req, res) {
             let promise;
 
-            if (!is_valid_strings(req.query)) {
+            if (!is_valid_strings(String(req.query))) {
                 res.status(400).json({ 'message': 'Multiple query parameters are not allowed.' });
                 return;
             }
 
             if (req.query.hasOwnProperty('range')) {
-                let searchRange = createRange(req.query.range);
+                let searchRange = createRange(String(req.query.range));
                 if (searchRange.startsWith('Error')) {
                     res.status(500).json({ 'message': searchRange });
                     return;
