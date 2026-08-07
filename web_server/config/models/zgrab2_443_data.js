@@ -175,7 +175,7 @@ module.exports = {
                 }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: serialNumber
+                    [zgrab2_cert_path + 'certificate.parsed.serial_number']: mongoSanitize.sanitize({ data: serialNumber }).data
                 }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
             }
         } else {
