@@ -44,7 +44,7 @@ module.exports = {
                 return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
         } else if (count) {
-            return zPortSchema.zgrabPortModel.find({ 'ip': ip }).countDocuments().exec()
+            return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec()
         }
         return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exec();
     },
