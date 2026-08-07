@@ -165,7 +165,7 @@ module.exports = {
     },
     getSSLAlgorithmByZonePromise: function (algorithm, zone, count) {
         let escZone = zone.replace('.', '\\.');
-        let reZone = new RegExp('^.*\.' + escZone + '$');
+        let reZone = new RegExp('^.*\.' + escapeRegExp(escZone) + '$');
         let promise;
         if (count === true) {
             promise = cSchema.censysModel.find({
