@@ -162,7 +162,7 @@ module.exports = {
     },
     getSSLByValidity2kPromise: function () {
         let isBefore2010 = new RegExp('^200.*');
-        return z2PortSchema.zgrab2PortModel.find({ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.validity.end': isBefore2010 },
+        return z2PortSchema.zgrab2PortModel.find({ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.validity.end': mongoSanitize.sanitize({ data: isBefore2010 }).data },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
