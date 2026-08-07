@@ -36,7 +36,7 @@ module.exports = {
     ipv6AddrModel: ipv6AddrModel,
     getIBIPv6AddrByZonePromise: function (zone) {
         return ipv6AddrModel.find({
-            'zone': zone,
+            'zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBIPv6AddrByIBloxZonePromise: function (zone) {
