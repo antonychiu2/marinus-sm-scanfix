@@ -270,7 +270,7 @@ module.exports = {
         } else {
             if (limit > 0) {
                 promise = cSchema.censysModel.find({
-                    'p443.https.tls.chain.0.parsed.issuer.common_name': caIssuer,
+                    'p443.https.tls.chain.0.parsed.issuer.common_name': mongoSanitize.sanitize({ data: caIssuer }).data,
                 }).skip(limit * (page - 1)).limit(limit).exec();
             } else {
                 promise = cSchema.censysModel.find({
