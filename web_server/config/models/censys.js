@@ -265,7 +265,7 @@ module.exports = {
         let promise;
         if (count === true) {
             promise = cSchema.censysModel.countDocuments({
-                'p443.https.tls.chain.0.parsed.issuer.common_name': caIssuer,
+                'p443.https.tls.chain.0.parsed.issuer.common_name': mongoSanitize.sanitize({ data: caIssuer }).data,
             }).exec();
         } else {
             if (limit > 0) {
