@@ -46,7 +46,7 @@ module.exports = {
         } else if (count) {
             return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec()
         }
-        return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exec();
+        return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordByDomainPromise: function (domain, port, count) {
         if (port === "22") {
