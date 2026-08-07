@@ -78,9 +78,9 @@ module.exports = {
                 }).countDocuments().exec();
             } else {
                 return zPortSchema.zgrabPortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.tls.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.tls.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }, { 'ip': 1, 'data.tls': 1 }).exec();
             }
         } else if (port === "465") {
