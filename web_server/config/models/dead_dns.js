@@ -110,7 +110,7 @@ module.exports = {
             || subdomain === 'dead') {
             subdomain = '';
         }
-        let reAmazon = new RegExp('^.*' + subdomain + '\.amazonaws\.com');
+        let reAmazon = new RegExp('^.*' + escapeRegExp(subdomain) + '\.amazonaws\.com');
 
         let query = {
             'type': 'cname',
