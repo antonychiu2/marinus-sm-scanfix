@@ -43,7 +43,7 @@ module.exports = {
     getRecordsByZonePromise: function (zone, count, limit, page) {
         let promise;
         if (count) {
-            promise = z2_443_schema.zgrab2_443_model.countDocuments({ 'zones': zone }).exec();
+            promise = z2_443_schema.zgrab2_443_model.countDocuments({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         } else {
             if (limit > 0) {
                 promise = z2_443_schema.zgrab2_443_model.find({ 'zones': zone }).skip(limit * (page - 1)).limit(limit).exec();
