@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z80Schema = require('./zgrab_80_data_schema.js');
 
 // zgrab port 80 Module
@@ -28,7 +29,7 @@ module.exports = {
         if (count) {
             return z80Schema.zgrab80Model.find({ 'ip': ip }).countDocuments().exec();
         }
-        return z80Schema.zgrab80Model.find({ 'ip': ip }).exec();
+        return z80Schema.zgrab80Model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordsByZonePromise: function (zone, count) {
         let promise;
