@@ -166,7 +166,7 @@ module.exports = {
       }).exec();
     } else {
       promise = certTransModel.find({
-        'signature_algorithm': algorithm,
+        'signature_algorithm': mongoSanitize.sanitize({ data: algorithm }).data,
         'isExpired': false
       }).exec();
     }
