@@ -92,9 +92,9 @@ module.exports = {
                 }).countDocuments().exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.smtps.result.tls.handshake_log.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.smtps.result.tls.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.smtps.result.tls.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
         } else if (count) {
