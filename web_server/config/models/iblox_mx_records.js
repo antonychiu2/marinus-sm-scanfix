@@ -42,7 +42,7 @@ module.exports = {
     },
     getIBMXByIBloxZonePromise: function (zone) {
         return mxModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBMXByNamePromise: function (name) {
