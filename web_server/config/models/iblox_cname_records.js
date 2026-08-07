@@ -39,7 +39,7 @@ module.exports = {
     },
     getIBCNameByIBloxZonePromise: function (zone) {
         return cnameModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBCNameByNamePromise: function (name) {
