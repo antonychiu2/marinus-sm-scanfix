@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const z2PortSchema = require('./zgrab2_port_schema.js');
 
 // ZGrab 2.0 port scan module
@@ -170,7 +171,7 @@ module.exports = {
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByCorpNamePromise: function (internalDomain, count) {
-        let reCorp = new RegExp('^.*\.' + internalDomain);
+        let reCorp = new RegExp('^.*\.' + escapeRegExp(internalDomain));
         if (count) {
             return z2PortSchema.zgrab2PortModel.find({
                 '$or': [{ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.subject.common_name': reCorp },
