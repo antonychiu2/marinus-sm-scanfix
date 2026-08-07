@@ -154,7 +154,7 @@ module.exports = {
             }).countDocuments().exec();
         } else {
             promise = cSchema.censysModel.find({
-                'p443.https.tls.certificate.parsed.signature.signature_algorithm.name': algorithm,
+                'p443.https.tls.certificate.parsed.signature.signature_algorithm.name': mongoSanitize.sanitize({ data: algorithm }).data,
             }, {
                 'ip': 1,
                 'p443.https.tls.certificate': 1,
