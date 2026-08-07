@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const zPortSchema = require('./zgrab_port_schema.js');
 
 // zgrab port scan module
@@ -99,7 +100,7 @@ module.exports = {
         } else if (count) {
             return (zPortSchema.zgrabPortModel.find({ 'domains': domain }).countDocuments().exec());
         }
-        return (zPortSchema.zgrabPortModel.find({ 'domains': domain }).exec());
+        return (zPortSchema.zgrabPortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).exec());
     },
     getRecordByZonePromise: function (zone, port, count) {
         if (port === "22") {
