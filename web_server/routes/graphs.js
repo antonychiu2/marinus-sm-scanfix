@@ -538,7 +538,7 @@ module.exports = function (envConfig) {
                 return;
             }
 
-            if (!is_valid_strings(req.query)) {
+            if (!is_valid_strings(String(req.query))) {
                 res.status(400).json({ 'message': 'Multiple query parameters are not allowed.' });
                 return;
             }
