@@ -135,9 +135,9 @@ module.exports = {
         let promise;
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'emails': { '$eq': null } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'emails': { '$eq': null } },
                 { 'emails': { '$eq': [] } },
-                { 'emails': { '$exists': false } }],
+                { 'emails': { '$exists': false } }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
