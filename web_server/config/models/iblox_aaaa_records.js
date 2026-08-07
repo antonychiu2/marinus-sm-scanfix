@@ -57,7 +57,7 @@ module.exports = {
     getIBIPv6AddrByIPRangePromise: function (ipRange) {
         let reZone = new RegExp('^' + ipRange + '\\..*');
         return ipv6AddrModel.find({
-            'ipv6addr': { '$regex': reZone },
+            'ipv6addr': mongoSanitize.sanitize({ data: { '$regex': reZone } }).data,
         }).exec();
     },
     getIBIPv6AddrCountPromise: function (zone) {
