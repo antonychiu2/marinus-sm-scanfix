@@ -220,7 +220,7 @@ module.exports = {
             }).exists('detected_urls').countDocuments().exec();
         } else {
             promise = virustotalModel.find({
-                'detected_urls': { '$ne': [] },
+                'detected_urls': mongoSanitize.sanitize({ data: { '$ne': [] } }).data,
             }, {
                 'zone': 1,
                 'detected_urls': 1
