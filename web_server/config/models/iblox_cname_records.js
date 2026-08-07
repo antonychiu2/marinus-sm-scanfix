@@ -61,7 +61,7 @@ module.exports = {
         let promise;
         if (zone) {
             promise = cnameModel.find({
-                'canonical': { '$regex': reSearch },
+                'canonical': mongoSanitize.sanitize({ data: { '$regex': reSearch } }).data,
                 'zone': zone,
             }).exec();
         } else {
