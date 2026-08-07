@@ -331,7 +331,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.countDocuments({
-                [zgrab2_cert_path + 'certificate.parsed.subject.organization']: org,
+                [zgrab2_cert_path + 'certificate.parsed.subject.organization']: mongoSanitize.sanitize({ data: org }).data,
             }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
