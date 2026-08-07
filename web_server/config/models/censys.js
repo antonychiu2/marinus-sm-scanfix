@@ -295,7 +295,7 @@ module.exports = {
         return (promise);
     },
     getUnknownHttpHeaderPromise: function (header, zone, count) {
-        let query = { 'p80.http.get.headers.unknown.key': header };
+        let query = { 'p80.http.get.headers.unknown.key': mongoSanitize.sanitize({ data: header }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
