@@ -46,7 +46,7 @@ module.exports = {
     },
     getIBTXTByNamePromise: function (name) {
         return txtModel.find({
-            'name': name,
+            'name': mongoSanitize.sanitize({ data: name }).data,
         }).exec();
     },
     getIBTXTByRegex: function (regex) {
