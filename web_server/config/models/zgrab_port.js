@@ -114,7 +114,7 @@ module.exports = {
         } else if (count) {
             return zPortSchema.zgrabPortModel.find({ 'zones': zone }).countDocuments().exec();
         }
-        return zPortSchema.zgrabPortModel.find({ 'zones': zone }).exec();
+        return zPortSchema.zgrabPortModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
     },
     getTLSIPListPromise: function (count, limit, page) {
         if (count) {
