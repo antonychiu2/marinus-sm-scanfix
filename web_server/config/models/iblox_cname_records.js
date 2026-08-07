@@ -34,7 +34,7 @@ module.exports = {
     CnameModel: cnameModel,
     getIBCNameByZonePromise: function (zone) {
         return cnameModel.find({
-            'zone': zone,
+            'zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBCNameByIBloxZonePromise: function (zone) {
