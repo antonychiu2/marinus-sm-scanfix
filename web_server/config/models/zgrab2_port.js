@@ -39,7 +39,7 @@ module.exports = {
             }
         } else if (port === "465") {
             if (count) {
-                return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }).exists('data.smtps').exec();
+                return z2PortSchema.zgrab2PortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.smtps').exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
