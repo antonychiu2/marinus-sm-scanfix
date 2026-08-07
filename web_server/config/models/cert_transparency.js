@@ -184,8 +184,8 @@ module.exports = {
   getCorpCount: function (corp_domain) {
     let reCorp = new RegExp('^.*\.' + corp_domain);
     return certTransModel.find({
-      '$or': [{ 'subject_common_names': reCorp },
-      { 'subject_dns_names': reCorp }],
+      '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+      { 'subject_dns_names': reCorp }] }).data,
     }).countDocuments().exec();
   },
   getCertCount: function () {
