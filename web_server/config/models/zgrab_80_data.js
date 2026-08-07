@@ -98,7 +98,7 @@ module.exports = {
         return z80Schema.zgrab80Model.find(query).select(headerQuery + ' zones ip domain').exec();
     },
     getUnknownHttpHeaderByValuePromise: function (header, value, zone) {
-        let query = { 'data.http.response.headers.unknown.value': value };
+        let query = { 'data.http.response.headers.unknown.value': mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
