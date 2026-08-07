@@ -127,7 +127,7 @@ module.exports = {
         if (count) {
             promise = whoisModel.countDocuments({ 'emails': email }).exec();
         } else {
-            promise = whoisModel.find({ 'emails': email }).exec();
+            promise = whoisModel.find({ 'emails': mongoSanitize.sanitize({ data: email }).data }).exec();
         }
         return promise;
     },
