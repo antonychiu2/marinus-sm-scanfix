@@ -106,7 +106,7 @@ module.exports = {
         return (promise);
     },
     getSSLByCorpNamePromise: function (internalDomain) {
-        let reCorp = new RegExp('^.*\.' + internalDomain);
+        let reCorp = new RegExp('^.*\.' + escapeRegExp(internalDomain));
         return cSchema.censysModel.find({
             '$or': [{ 'p443.https.tls.certificate.parsed.subject.common_name': reCorp },
             { 'p443.https.tls.certificate.parsed.extensions.subject_alt_name.dns_names': reCorp }],
