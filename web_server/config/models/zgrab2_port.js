@@ -100,7 +100,7 @@ module.exports = {
         } else if (count) {
             return (z2PortSchema.zgrab2PortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec());
         }
-        return (z2PortSchema.zgrab2PortModel.find({ 'domains': domain }).exec());
+        return (z2PortSchema.zgrab2PortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).exec());
     },
     getRecordByZonePromise: function (zone, port, count) {
         if (port === "22") {
