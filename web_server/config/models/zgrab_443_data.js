@@ -657,7 +657,7 @@ module.exports = {
         return zSchema.zgrab443Model.find(query).select(headerQuery + ' zones domain ip').exec();
     },
     getUnknownHttpHeaderByValuePromise: function (value, zone) {
-        let query = { 'data.http.response.headers.unknown.value': value };
+        let query = { 'data.http.response.headers.unknown.value': mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
