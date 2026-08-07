@@ -23,7 +23,7 @@ module.exports = {
             if (count) {
                 return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.xssh').exec();
             } else {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.xssh': 1 }).exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }, { 'ip': 1, 'data.xssh': 1 }).exec();
             }
         } else if (port === "25") {
             if (count) {
