@@ -41,7 +41,7 @@ module.exports = {
     },
     getIBTXTByIBloxZonePromise: function (zone) {
         return txtModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBTXTByNamePromise: function (name) {
