@@ -58,7 +58,7 @@ module.exports = {
         } else if (limit > 0 && page > 0) {
             promise = z80Schema.zgrab80Model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
-            promise = z80Schema.zgrab80Model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1 }).exec();
+            promise = z80Schema.zgrab80Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1 }).exec();
         }
         return (promise);
     },
