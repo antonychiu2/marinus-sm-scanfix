@@ -484,7 +484,7 @@ module.exports = {
                 }).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({
-                    [zgrab_cert_path + 'certificate.parsed.fingerprint_sha256']: fingerprint,
+                    [zgrab_cert_path + 'certificate.parsed.fingerprint_sha256']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             }
         } else {
