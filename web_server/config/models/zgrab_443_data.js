@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const escapeRegExp = require('lodash.escaperegexp');
 const zSchema = require('./zgrab_443_data_schema.js');
 const zgrab_cert_path = 'data.http.response.request.tls_handshake.server_certificates.';
 
@@ -239,7 +240,7 @@ module.exports = {
         return (promise);
     },
     getSSLByValidityYearPromise: function (year, recursive) {
-        let thisDecade = new RegExp('^' + year + '.*');
+        let thisDecade = new RegExp('^' + escapeRegExp(year) + '.*');
         let promise;
         if (recursive === true) {
             promise = zSchema.zgrab443Model.find({
