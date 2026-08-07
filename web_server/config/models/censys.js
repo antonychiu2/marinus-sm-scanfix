@@ -309,7 +309,7 @@ module.exports = {
     },
     getHttpHeaderByValuePromise: function (header, value, zone) {
         let headerQuery = 'p80.http.get.headers.' + header;
-        let query = { [headerQuery]: value };
+        let query = { [headerQuery]: mongoSanitize.sanitize({ data: value }).data };
         if (zone != null && zone !== '') {
             query['zones'] = zone;
         }
