@@ -33,7 +33,7 @@ module.exports = {
             }
         } else if (port === "443") {
             if (count) {
-                return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }).exists('data.tls').exec();
+                return z2PortSchema.zgrab2PortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.tls').exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({ 'ip': ip }, { 'ip': 1, 'data.tls': 1 }).exec();
             }
