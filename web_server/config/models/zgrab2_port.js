@@ -110,7 +110,7 @@ module.exports = {
         } else if (port === "443") {
             return z2PortSchema.zgrab2PortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.tls").exec();
         } else if (port === "465") {
-            return z2PortSchema.zgrab2PortModel.find({ "zones": zone }).exists("data.smtps").exec();
+            return z2PortSchema.zgrab2PortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.smtps").exec();
         } else if (count) {
             return z2PortSchema.zgrab2PortModel.find({ 'zones': zone }).countDocuments().exec();
         }
