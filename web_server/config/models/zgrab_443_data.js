@@ -151,10 +151,10 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = zSchema.zgrab443Model.countDocuments({
-                    '$or': [{ [zgrab_cert_path + 'certificate.parsed.subject.common_name']: reZone },
+                    '$or': mongoSanitize.sanitize({ data: [{ [zgrab_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone },
                     { [zgrab_cert_path + 'certificate.parsed.subject.common_name']: zone },
-                    { [zgrab_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: zone }],
+                    { [zgrab_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: zone }] }).data,
                 }).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({
