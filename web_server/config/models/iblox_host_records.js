@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -60,7 +61,7 @@ module.exports = {
     getIBHostByIPRangePromise: function (ipRange) {
         let reZone = new RegExp('^' + ipRange + '\\..*');
         return hostModel.find({
-            'ipv4addrs.ipv4addr': { '$regex': reZone },
+            'ipv4addrs.ipv4addr': mongoSanitize.sanitize({ data: { '$regex': reZone } }).data,
         });
     },
     getIBHostCountPromise: function (zone) {
