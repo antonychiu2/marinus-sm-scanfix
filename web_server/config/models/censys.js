@@ -22,7 +22,7 @@ module.exports = {
         return cSchema.censysModel.find({ 'ip': ip }).exec();
     },
     getRecordByIpRangePromise: function (ipRange) {
-        let reZone = new RegExp('^' + ipRange + '\\..*');
+        let reZone = new RegExp('^' + escapeRegExp(ipRange) + '\\..*');
         return cSchema.censysModel.find({
             'ip': { '$regex': reZone },
         }).exec();
