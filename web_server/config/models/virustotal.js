@@ -114,7 +114,7 @@ module.exports = {
         let promise;
         if (count) {
             promise = virustotalModel.find({
-                'detected_referrer_samples': { '$ne': [] },
+                'detected_referrer_samples': mongoSanitize.sanitize({ data: { '$ne': [] } }).data,
             }).exists('detected_referrer_samples').countDocuments().exec();
         } else {
             promise = virustotalModel.find({
