@@ -21,7 +21,7 @@ module.exports = {
     getRecordByIPPromise: function (ip, port, count) {
         if (port === "22") {
             if (count) {
-                return zPortSchema.zgrabPortModel.find({ 'ip': ip }).exists('data.xssh').exec();
+                return zPortSchema.zgrabPortModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exists('data.xssh').exec();
             } else {
                 return zPortSchema.zgrabPortModel.find({ 'ip': ip }, { 'ip': 1, 'data.xssh': 1 }).exec();
             }
