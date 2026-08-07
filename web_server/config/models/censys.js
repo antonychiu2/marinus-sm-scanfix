@@ -24,7 +24,7 @@ module.exports = {
     getRecordByIpRangePromise: function (ipRange) {
         let reZone = new RegExp('^' + ipRange + '\\..*');
         return cSchema.censysModel.find({
-            'ip': { '$regex': reZone },
+            'ip': mongoSanitize.sanitize({ data: { '$regex': reZone } }).data,
         }).exec();
     },
     getRecordsByZonePromise: function (zone, count) {
