@@ -51,7 +51,7 @@ module.exports = {
     getRecordByDomainPromise: function (domain, port, count) {
         if (port === "22") {
             if (count) {
-                return z2PortSchema.zgrab2PortModel.find({ "domains": domain }).countDocuments().exec();
+                return z2PortSchema.zgrab2PortModel.find({ "domains": mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({ "domains": domain }).exec();
             }
