@@ -164,7 +164,7 @@ module.exports = {
         let promise;
         if (count) {
             promise = virustotalModel.find({
-                'zone': zone,
+                'zone': mongoSanitize.sanitize({ data: zone }).data,
                 'detected_communicating_samples': { '$ne': [] },
             }).exists('detected_communicating_samples').countDocuments().exec();
         } else {
