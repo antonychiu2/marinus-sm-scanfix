@@ -112,7 +112,7 @@ module.exports = {
         } else if (port === "465") {
             return z2PortSchema.zgrab2PortModel.find({ "zones": mongoSanitize.sanitize({ data: zone }).data }).exists("data.smtps").exec();
         } else if (count) {
-            return z2PortSchema.zgrab2PortModel.find({ 'zones': zone }).countDocuments().exec();
+            return z2PortSchema.zgrab2PortModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).countDocuments().exec();
         }
         return z2PortSchema.zgrab2PortModel.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
     },
