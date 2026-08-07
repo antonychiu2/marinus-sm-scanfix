@@ -97,8 +97,8 @@ module.exports = {
         }).countDocuments().exec();
       } else {
         promise = certTransModel.find({
-          '$or': [{ 'subject_common_names': reCorp },
-          { 'subject_dns_names': reCorp }],
+          '$or': mongoSanitize.sanitize({ data: [{ 'subject_common_names': reCorp },
+          { 'subject_dns_names': reCorp }] }).data,
           'isExpired': false
         }).exec();
       }
