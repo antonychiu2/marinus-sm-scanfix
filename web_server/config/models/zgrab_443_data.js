@@ -69,7 +69,7 @@ module.exports = {
         if (count) {
             promise = zSchema.zgrab443Model.countDocuments({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
-            promise = zSchema.zgrab443Model.find({ "ip": { "$ne": "<nil>" } }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).skip(limit * (page - 1)).limit(limit).exec();
+            promise = zSchema.zgrab443Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
             promise = zSchema.zgrab443Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1, "aws": 1, "azure": 1, "tracked": 1 }).exec();
         }
