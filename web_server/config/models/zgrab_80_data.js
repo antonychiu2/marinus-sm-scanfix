@@ -54,7 +54,7 @@ module.exports = {
     getIPListPromise: function (count, limit, page) {
         let promise;
         if (count) {
-            promise = z80Schema.zgrab80Model.countDocuments({ "ip": { "$ne": "<nil>" } }).exec();
+            promise = z80Schema.zgrab80Model.countDocuments({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }).exec();
         } else if (limit > 0 && page > 0) {
             promise = z80Schema.zgrab80Model.find({ "ip": mongoSanitize.sanitize({ data: { "$ne": "<nil>" } }).data }, { "_id": 0, "ip": 1 }).skip(limit * (page - 1)).limit(limit).exec();
         } else {
