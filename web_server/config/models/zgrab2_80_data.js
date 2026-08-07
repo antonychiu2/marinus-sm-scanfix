@@ -12,6 +12,7 @@
  * governing permissions and limitations under the License.
  */
 
+const mongoSanitize = require('express-mongo-sanitize');
 const z2_80_schema = require('./zgrab2_80_data_schema.js');
 
 // ZGrab 2.0 port 80 module
@@ -35,7 +36,7 @@ module.exports = {
         if (count) {
             promise = z2_80_schema.zgrab2_80_model.countDocuments({ 'zones': zone }).exec();
         } else {
-            promise = z2_80_schema.zgrab2_80_model.find({ 'zones': zone }).exec();
+            promise = z2_80_schema.zgrab2_80_model.find({ 'zones': mongoSanitize.sanitize({ data: zone }).data }).exec();
         }
         return (promise);
     },
