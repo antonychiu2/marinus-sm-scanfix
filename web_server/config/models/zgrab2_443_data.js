@@ -358,7 +358,7 @@ module.exports = {
                 }).exec();
             } else {
                 promise = z2_443_schema.zgrab2_443_model.find({
-                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab2_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                 }, {
                     'ip': 1,
                     'domain': 1,
