@@ -198,7 +198,7 @@ module.exports = {
         } else {
             if (org === undefined || org === null) {
                 promise = cSchema.censysModel.find({
-                    'p443': { '$exists': true },
+                    'p443': mongoSanitize.sanitize({ data: { '$exists': true } }).data,
                     'p443.https.heartbleed.heartbleed_vulnerable': true
                 }).exec();
             } else {
