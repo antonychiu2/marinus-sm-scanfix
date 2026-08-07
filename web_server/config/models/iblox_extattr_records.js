@@ -53,7 +53,7 @@ module.exports = {
      */
     getIBZoneExtattr: function (value) {
         return extattrModel.find({
-            'record_type': 'zone',
+            'record_type': mongoSanitize.sanitize({ data: 'zone' }).data,
             'value': value,
         }, { 'extattrs': 1 }).exec();
     },
