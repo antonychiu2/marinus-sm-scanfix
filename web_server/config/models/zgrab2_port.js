@@ -166,7 +166,7 @@ module.exports = {
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
     getSSLByValidityYearPromise: function (year) {
-        let thisDecade = new RegExp('^' + year + '.*');
+        let thisDecade = new RegExp('^' + escapeRegExp(year) + '.*');
         return z2PortSchema.zgrab2PortModel.find({ 'data.tls.result.handshake_log.server_certificates.certificate.parsed.validity.end': thisDecade },
             { 'domain': 1, 'ip': 1, 'data.tls': 1 }).exec();
     },
