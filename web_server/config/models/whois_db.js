@@ -58,7 +58,7 @@ module.exports = {
                 'name_servers': mongoSanitize.sanitize({ data: reServer }).data,
             }).exec();
         } else {
-            promise = whoisModel.find({ 'name_servers': reServer }).exec();
+            promise = whoisModel.find({ 'name_servers': mongoSanitize.sanitize({ data: reServer }).data }).exec();
         }
         return promise;
     },
