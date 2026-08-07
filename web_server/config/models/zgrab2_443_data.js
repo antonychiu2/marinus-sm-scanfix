@@ -138,8 +138,8 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.find({
-                '$or': [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: commonName },
-                { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: commonName }],
+                '$or': mongoSanitize.sanitize({ data: [{ [zgrab2_cert_path + 'certificate.parsed.subject.common_name']: commonName },
+                { [zgrab2_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: commonName }] }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
