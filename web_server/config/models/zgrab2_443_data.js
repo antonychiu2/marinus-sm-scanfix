@@ -36,7 +36,7 @@ module.exports = {
     },
     getRecordByIPPromise: function (ip, count) {
         if (count) {
-            return z2_443_schema.zgrab2_443_model.find({ 'ip': ip }).countDocuments().exec();
+            return z2_443_schema.zgrab2_443_model.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).countDocuments().exec();
         }
         return z2_443_schema.zgrab2_443_model.find({ 'ip': ip }).exec();
     },
