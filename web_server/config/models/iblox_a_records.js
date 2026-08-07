@@ -39,7 +39,7 @@ module.exports = {
     },
     getIBAddrByIBloxZonePromise: function (zone) {
         return ipAddrModel.find({
-            'infoblox_zone': zone,
+            'infoblox_zone': mongoSanitize.sanitize({ data: zone }).data,
         }).exec();
     },
     getIBAddrByNamePromise: function (name) {
