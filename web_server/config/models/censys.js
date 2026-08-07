@@ -19,7 +19,7 @@ const cSchema = require('./censys_schema2');
 module.exports = {
     CensysModel: cSchema.censysModel,
     getRecordByIpPromise: function (ip) {
-        return cSchema.censysModel.find({ 'ip': ip }).exec();
+        return cSchema.censysModel.find({ 'ip': mongoSanitize.sanitize({ data: ip }).data }).exec();
     },
     getRecordByIpRangePromise: function (ipRange) {
         let reZone = new RegExp('^' + ipRange + '\\..*');
