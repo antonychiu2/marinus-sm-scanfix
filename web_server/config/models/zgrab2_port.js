@@ -72,9 +72,9 @@ module.exports = {
         } else if (port === "443") {
             if (count) {
                 return z2PortSchema.zgrab2PortModel.find({
-                    '$or': [{ 'domains': domain },
+                    '$or': mongoSanitize.sanitize({ data: [{ 'domains': domain },
                     { 'data.tls.result.handshake_log.server_certificates.certificate.parsed.subject.common_name': domain },
-                    { 'data.tls.result.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }]
+                    { 'data.tls.result.handshake_log.server_certificates.certificate.parsed.extensions.subject_alt_name.dns_names': domain }] }).data
                 }).countDocuments().exec();
             } else {
                 return z2PortSchema.zgrab2PortModel.find({
