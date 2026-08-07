@@ -210,7 +210,7 @@ module.exports = {
         'scts.log_name': mongoSanitize.sanitize({ data: logName }).data,
       }).exec();
     } else {
-      promise = certTransModel.find({ 'scts.log_name': logName }).exec();
+      promise = certTransModel.find({ 'scts.log_name': mongoSanitize.sanitize({ data: logName }).data }).exec();
     }
     return promise;
   },
