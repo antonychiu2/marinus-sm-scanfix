@@ -360,7 +360,7 @@ module.exports = {
                 }).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({
-                    [zgrab_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: algorithm,
+                    [zgrab_cert_path + 'certificate.parsed.signature.signature_algorithm.name']: mongoSanitize.sanitize({ data: algorithm }).data,
                     '$or': [{ [zgrab_cert_path + 'certificate.parsed.subject.common_name']: reZone },
                     { [zgrab_cert_path + 'certificate.parsed.extensions.subject_alt_name.dns_names']: reZone }]
                 },
