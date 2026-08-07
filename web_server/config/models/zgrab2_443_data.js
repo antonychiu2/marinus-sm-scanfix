@@ -310,7 +310,7 @@ module.exports = {
         let promise;
         if (recursive === true) {
             promise = z2_443_schema.zgrab2_443_model.find({
-                [zgrab2_cert_path + 'certificate.parsed.validity.end']: thisDecade,
+                [zgrab2_cert_path + 'certificate.parsed.validity.end']: mongoSanitize.sanitize({ data: thisDecade }).data,
             }, { 'domain': 1, 'ip': 1, 'data.http': 1 }).exec();
         } else {
             promise = z2_443_schema.zgrab2_443_model.aggregate([{
