@@ -572,7 +572,7 @@ module.exports = {
                     }).skip(limit * (page - 1)).limit(limit).exec();
                 } else {
                     promise = zSchema.zgrab443Model.find({
-                        [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: caIssuer,
+                        [zgrab_cert_path + 'chain.0.parsed.issuer.common_name']: mongoSanitize.sanitize({ data: caIssuer }).data,
                     }).exec();
                 }
             }
