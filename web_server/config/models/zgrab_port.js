@@ -98,7 +98,7 @@ module.exports = {
                 }, { 'ip': 1, 'data.smtps': 1 }).exec();
             }
         } else if (count) {
-            return (zPortSchema.zgrabPortModel.find({ 'domains': domain }).countDocuments().exec());
+            return (zPortSchema.zgrabPortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).countDocuments().exec());
         }
         return (zPortSchema.zgrabPortModel.find({ 'domains': mongoSanitize.sanitize({ data: domain }).data }).exec());
     },
