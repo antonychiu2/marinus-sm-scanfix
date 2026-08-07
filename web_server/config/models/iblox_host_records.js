@@ -55,7 +55,7 @@ module.exports = {
     },
     getIBHostByIPPromise: function (ip) {
         return hostModel.find({
-            'ipv4addrs.ipv4addr': ip,
+            'ipv4addrs.ipv4addr': mongoSanitize.sanitize({ data: ip }).data,
         });
     },
     getIBHostByIPRangePromise: function (ipRange) {
