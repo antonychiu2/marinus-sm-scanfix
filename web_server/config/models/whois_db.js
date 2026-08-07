@@ -107,10 +107,10 @@ module.exports = {
         let query = new RegExp('^(n|no)$', 'i');
         if (count) {
             promise = whoisModel.countDocuments({
-                '$or': [{ 'dnssec': { '$exists': false } },
+                '$or': mongoSanitize.sanitize({ data: [{ 'dnssec': { '$exists': false } },
                 { 'dnssec': false },
                 { 'dnssec': query },
-                { 'dnssec': null }],
+                { 'dnssec': null }] }).data,
             }).exec();
         } else {
             promise = whoisModel.find({
