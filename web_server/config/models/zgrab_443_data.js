@@ -438,7 +438,7 @@ module.exports = {
         if (recursive === true) {
             if (count) {
                 promise = zSchema.zgrab443Model.countDocuments({
-                    [zgrab_cert_path + 'certificate.parsed.fingerprint_sha1']: fingerprint,
+                    [zgrab_cert_path + 'certificate.parsed.fingerprint_sha1']: mongoSanitize.sanitize({ data: fingerprint }).data,
                 }).exec();
             } else {
                 promise = zSchema.zgrab443Model.find({
